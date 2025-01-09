@@ -1,10 +1,13 @@
-INTRODUCTION
+INTRODUCTION:
+
 RageMenuRDR2 is a newly open-source project developed by Kapiushon and JJ. This Red Dead Redemption 2 mod menu is designed to seamlessly integrate with the game, featuring an in-game UI that mirrors the authentic RDR2 look and feel.
 
-Built on a Solid Foundation:
+BUILT ON A SOLID FOUNDATION:
+
 RageMenu is built on the RDR2 Native Menu Base by Halen84, with numerous modifications and improvements that enhance both functionality and usability. https://github.com/Halen84/RDR2-Native-Menu-Base
 
-Features:
+FEATURES
+
 RageMenu is an all-purpose mod focused on quality of life and gameplay enhancements, making the game’s story and exploration even more enjoyable. It includes essential features such as:
 
 God Mode,
