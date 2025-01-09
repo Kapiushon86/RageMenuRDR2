@@ -203,7 +203,7 @@ void CNativeMenu::HandleEnterPressed()
 	else if (option->IsBoolOption) {
 		BoolOption* boolOption = option->As<BoolOption*>();
 		if (boolOption->pBoolPointer != nullptr) {
-			*boolOption->pBoolPointer ^= TRUE; // Toggle boolean value
+			*boolOption->pBoolPointer ^= TRUE; 
 		}
 		else {
 			std::cerr << "Invalid boolean pointer for option index " << m_SelectionIndex << std::endl;
