@@ -29,6 +29,10 @@ If you believe something is not coded optimally or could be improved, we encoura
 
 FOLDER STRUCTURE
 
+Ui/Options - Contains all option types
+
+Ui/ - Contains all ui elements drawing, writing sprites, menu version, etc basically everything you see. menu_version.h is where current version is defined, drawing.cpp handles most of the drawing but some other are done throughout ui and SubmenuIDs contains all the submenu ids which are needed when creating a new submenu.
+
 Utils/Config - All config related files, so all folders and files created here loading ini config stuff some logging etc.
 
 Utils/Saving/States - Inside here you will find a bunch of submenu folders this is where the default states of each file is located for bool and vector features, .cpp is where default states are stored .h is where they are defined.
