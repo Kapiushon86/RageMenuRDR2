@@ -1,0 +1,6 @@
+#ifndef EFFECTS_DEFAULT_STATES_H
+#define EFFECTS_DEFAULT_STATES_H
+
+
+
+#endif

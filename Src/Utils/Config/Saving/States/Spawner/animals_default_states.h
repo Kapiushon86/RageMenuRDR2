@@ -1,0 +1,5 @@
+#ifndef ANIMALS_DEFAULT_STATES_H
+#define ANIMALS_DEFAULT_STATES_H
+
+
+#endif
