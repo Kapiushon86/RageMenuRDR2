@@ -27,4 +27,7 @@ As of January 9, 2025, RageMenu has been made open source. We welcome suggestion
 
 If you believe something is not coded optimally or could be improved, we encourage you to inspire us with your ideas.
 
+FOLDER STRUCTURE
+
 Utils/Config - All config related files, so all folders and files created here loading ini config stuff some logging etc.
+Utils/Saving - 
