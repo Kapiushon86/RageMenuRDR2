@@ -48,16 +48,14 @@
 #include <filesystem>
 #include <shlobj.h>
 #include <Lmcons.h>
+#include <fstream>
+#include <unordered_set>
 
-std::string DetectGraphicsAPI(int& logCounter, std::ofstream& logFile) {
-    char path[MAX_PATH];
-    SHGetFolderPathA(NULL, CSIDL_MYDOCUMENTS, NULL, 0, path);
+// Theres not really a good way to get user api without hooking but the simplest way would just be to do through config.
 
-    std::string settingsPath = std::string(path) + "\\Rockstar Games\\Red Dead Redemption 2\\Settings\\system.xml";
-
-    std::ifstream settingsFile(settingsPath);
-    std::string line;
+std::string ParseGraphicsAPI(std::ifstream& settingsFile, std::ofstream& logFile, int& logCounter) {
     std::string apiUsed = "Unknown API";
+    std::string line;
 
     if (settingsFile.is_open()) {
         while (std::getline(settingsFile, line)) {
@@ -75,11 +73,68 @@ std::string DetectGraphicsAPI(int& logCounter, std::ofstream& logFile) {
                 break;
             }
         }
-        settingsFile.close();
     }
     else {
         WriteLogEntry(logFile, "Err", "Settings File Could Not Be Opened", logCounter);
-        std::cerr << "Error: Settings file could not be opened!" << std::endl;
+    }
+
+    return apiUsed;
+}
+
+std::string GetEnvVariable(const std::string& varName) {
+    char* buffer = nullptr;
+    size_t size = 0;
+    if (_dupenv_s(&buffer, &size, varName.c_str()) == 0 && buffer != nullptr) {
+        std::string value(buffer);
+        free(buffer);
+        return value;
+    }
+    return "";
+}
+
+std::string DetectGraphicsAPI(int& logCounter, std::ofstream& logFile) {
+    namespace fs = std::filesystem;
+    char path[MAX_PATH];
+    SHGetFolderPathA(NULL, CSIDL_MYDOCUMENTS, NULL, 0, path);
+
+    // Dynamic paths
+    std::string rockstarPath = std::string(path) + "\\Rockstar Games\\Red Dead Redemption 2\\Settings\\system.xml";
+    std::string epicGamesPath = GetEnvVariable("LOCALAPPDATA") + "\\Rockstar Games\\Red Dead Redemption 2\\Settings\\system.xml";
+    std::string steamBasePath = GetEnvVariable("PROGRAMFILES(X86)") + "\\Steam\\userdata";
+
+    std::string apiUsed = "Unknown API";
+    std::unordered_set<std::string> processedPaths;
+
+    // Check Rockstar Games Launcher path
+    if (fs::exists(rockstarPath) && processedPaths.find(rockstarPath) == processedPaths.end()) {
+        processedPaths.insert(rockstarPath);
+        std::ifstream settingsFile(rockstarPath);
+        apiUsed = ParseGraphicsAPI(settingsFile, logFile, logCounter);
+    }
+    // Check Epic Games path
+    else if (fs::exists(epicGamesPath) && processedPaths.find(epicGamesPath) == processedPaths.end()) {
+        processedPaths.insert(epicGamesPath);
+        std::ifstream settingsFile(epicGamesPath);
+        apiUsed = ParseGraphicsAPI(settingsFile, logFile, logCounter);
+    }
+    // Check Steam path dynamically
+    else if (fs::exists(steamBasePath)) {
+        for (const auto& entry : fs::directory_iterator(steamBasePath)) {
+            if (entry.is_directory()) {
+                std::string steamPath = entry.path().string() + "\\1174180\\remote\\system.xml"; 
+                if (fs::exists(steamPath) && processedPaths.find(steamPath) == processedPaths.end()) {
+                    processedPaths.insert(steamPath);
+                    std::ifstream settingsFile(steamPath);
+                    apiUsed = ParseGraphicsAPI(settingsFile, logFile, logCounter);
+                    break;
+                }
+            }
+        }
+    }
+
+    if (processedPaths.empty()) {
+        WriteLogEntry(logFile, "Err", "Settings File Could Not Be Found", logCounter);
+        std::cerr << "Error: Settings file could not be found!" << std::endl;
     }
 
     return apiUsed;
