@@ -23,7 +23,7 @@ RageMenu was created to deliver a straightforward, uncluttered experience, offer
 
 OPEN SOURCE
 
-As of January 9, 2025, RageMenu has been made open source. We welcome suggestions and code improvements for public builds, which can be submitted through our Discord.
+As of January 9, 2025, RageMenu has been made open source (mostly). We welcome suggestions and code improvements for public builds, which can be submitted through our Discord.
 
 If you believe something is not coded optimally or could be improved, we encourage you to inspire us with your ideas.
 
