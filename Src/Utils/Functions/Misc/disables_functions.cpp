@@ -35,9 +35,9 @@ void Disables_DisableLocationInfoFunction() {
 }
 
 void Disables_DisableRadarWhenMenuOpenFunction() {
-
+// Done inside Ui/Menu.cpp
 }
 
 void Disables_DisableHorseWhistlingFunction() {
-
+// Done inside Ui/Menu.cpp
 }
