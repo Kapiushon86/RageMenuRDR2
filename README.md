@@ -30,4 +30,4 @@ If you believe something is not coded optimally or could be improved, we encoura
 FOLDER STRUCTURE
 
 Utils/Config - All config related files, so all folders and files created here loading ini config stuff some logging etc.
-Utils/Saving - 
+Utils/Saving/States - Inside here you will find a bunch of submenu folders this is where the default states of each file is located for bool and vector features, .cpp is where default states are stored .h is where they are defined.
