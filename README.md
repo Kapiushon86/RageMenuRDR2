@@ -1,0 +1,1 @@
+RageMenuRDR2 is an open newly open source project developed by Kapiushon and JJ. It is a rdr2 mod menu which uses in game ui to make them look simliar to how they are in game. RageMenu uses rdr2 base by Halen84 with many modifications and improvements. (https://github.com/Halen84/RDR2-Native-Menu-Base) 
