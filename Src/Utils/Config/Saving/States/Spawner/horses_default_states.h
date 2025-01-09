@@ -1,5 +1,0 @@
-#ifndef HORSES_DEFAULT_STATES_H
-#define HORSES_DEFAULT_STATES_H
-
-
-#endif

@@ -1,6 +1,0 @@
-#ifndef PLAYERS_DEFAULT_STATES_H
-#define PLAYERS_DEFAULT_STATES_H
-
-
-
-#endif

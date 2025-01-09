@@ -1,5 +1,0 @@
-#ifndef VEHICLES_DEFAULT_STATES_H
-#define VEHICLES_DEFAULT_STATES_H
-
-
-#endif
