@@ -26,3 +26,5 @@ OPEN SOURCE
 As of January 9, 2025, RageMenu has been made open source. We welcome suggestions and code improvements for public builds, which can be submitted through our Discord.
 
 If you believe something is not coded optimally or could be improved, we encourage you to inspire us with your ideas.
+
+Utils/Config - All config related files, so all folders and files created here loading ini config stuff some logging etc.
