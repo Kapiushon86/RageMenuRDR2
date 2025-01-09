@@ -126,7 +126,6 @@ void CNativeMenu::CheckInput()
 		(controllerComboCode != 0 && PAD::IS_CONTROL_PRESSED(m_ControlIndex, INPUT_FRONTEND_RB) &&
 			PAD::IS_CONTROL_PRESSED(m_ControlIndex, controllerComboCode));
 
-	// Other input checks remain unchanged:
 	m_EnterKeyPressed = IsKeyJustUp(VK_NUMPAD5) ||
 		PAD::IS_CONTROL_JUST_RELEASED(m_ControlIndex, INPUT_GAME_MENU_ACCEPT);
 
