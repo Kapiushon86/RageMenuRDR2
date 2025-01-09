@@ -18,9 +18,11 @@ No Clip
 A complete list of features is available on our Nexus Mods page. https://www.nexusmods.com/reddeadredemption2/mods/5244/?tab=description
 
 OUR GOAL
+
 RageMenu was created to deliver a straightforward, uncluttered experience, offering essential features without overcomplicating the menu or UI with unnecessary additions. Whether you're seeking gameplay tweaks or a smoother modding experience, RageMenu is built with simplicity and usability in mind. 
 
 OPEN SOURCE
+
 As of January 9, 2025, RageMenu has been made open source. We welcome suggestions and code improvements for public builds, which can be submitted through our Discord.
 
 If you believe something is not coded optimally or could be improved, we encourage you to inspire us with your ideas.
