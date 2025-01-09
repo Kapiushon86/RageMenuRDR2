@@ -1,0 +1,5 @@
+#ifndef RAGEMENU_DEFAULT_STATES_H
+#define RAGEMENU_DEFAULT_STATES_H
+
+
+#endif

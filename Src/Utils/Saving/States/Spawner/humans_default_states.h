@@ -1,0 +1,5 @@
+#ifndef HUMANS_DEFAULT_STATES_H
+#define HUMANS_DEFAULT_STATES_H
+
+
+#endif
