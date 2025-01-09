@@ -8,14 +8,156 @@ RageMenu is built on the RDR2 Native Menu Base by Halen84, with numerous modific
 
 FEATURES
 
-RageMenu is an all-purpose mod focused on quality of life and gameplay enhancements, making the game’s story and exploration even more enjoyable. It includes essential features such as:
+RageMenu is an all-purpose mod focused on quality of life and gameplay enhancements, making the game’s story and exploration even more enjoyable.
 
-God Mode,
-Super Jump,
-Lawless Mode,
-Quick Skin,
-No Clip
-A complete list of features is available on our Nexus Mods page. https://www.nexusmods.com/reddeadredemption2/mods/5244/?tab=description
+CURRENT FEATURES
+
+[MAIN]
+------
+
+>>> Player
+>>> Recovery
+>>> Weapons
+>>> World
+>>> Misc
+>>> Settings
+
+[PLAYER]
+--------
+
+>>> No Clip
+    - No Clip (Bool)
+    - Use Yaw Rotation (Bool)
+    - Freeze Entity (Bool)
+
+>>> Mount
+    - Preference (Vector)
+    - Invincibility (Bool)
+    - Invisibility (Bool)
+    - Infinite Stamina (Bool)
+    - Refill All Cores (Action)
+    - Refill Health Core (Action)
+    - Refill Stamina Core (Action)
+    - Fearless (Bool)
+    - No Ragdoll (Bool)
+    - Always Show Cores (Bool)
+    - Always Clean (Bool)
+    - Clean (Action)
+    - Clear Pelts (Action)
+    - Suicide (Action)
+    - Delete (Action)
+
+>>> Vehicle
+    - Invincibility (Bool)
+    - Invisibility (Bool)
+    - Disable Knock Off (Bool)
+    - Always Clean (Bool)
+    - Clean (Action)
+    - Fix (Action)
+    - Suicide (Action)
+    - Delete (Action)
+
+>>> Modifiers
+    - Infinite Stamina (Bool)
+    - Infinite Dead Eye (Bool)
+    - Infinite Eagle Eye (Bool)
+    - Refill All Cores (Action)
+    - Refill Health Core (Action)
+    - Refill Stamina Core (Action)
+    - Refill Dead Eye Core (Action)
+    -------------------------------
+
+    - Invincibility (Bool)
+    - Invisibility (Bool)
+    - Lawless (Bool)
+    - Super Jump (Bool)
+    - Super Punch (Bool)
+    - One Hit Ko (Bool)
+    - Anti Melee (Bool)
+    - Everyone Ignore (Bool)
+    - No Ragdoll (Bool)
+    - Quick Skin (Bool)
+    - Always Show Cores (Bool)
+    - Always Clean (Bool)
+    - Clean (Action)
+    - Suicide (Action)
+
+[RECOVERY]
+----------
+
+>>> Money
+    >>> Add
+        - 10k Loop (Bool)
+        - Add 10k (Action)
+
+[WEAPONS]
+---------
+
+>>> Weapons
+    - Lock All Weapons (Action)
+    - Unlock All Weapons (Action)
+    - Add All Weapons (Action)
+    - Remove All Weapons (Action)
+    - Add All Ammo (Action)
+    - Infinite Ammo (Bool)
+    - Infinite Clip (Bool)
+    - One Shot Kill (Bool)
+    - Auto Cock (Bool)
+    - No Spread (Bool)
+    - Always Clean (Bool)
+    - Clean (Action)
+
+[WORLD]
+-------
+
+>>> Time
+    - Freeze Time (Bool)
+    - Loop Time (Bool)
+    - Sync With System (Bool)
+    - Random Time (Action)
+    - 15 different preset time options (Action)
+
+>>> Weather
+    - Freeze Weather (Bool)
+    - Loop Weather (Bool)
+    - Ground Snow (Bool)
+    - Random Weather (Action)
+    - 22 different preset weather options (Action)
+
+[MISC]
+------
+
+>>> Free Camera
+    - Free Camera (Bool)
+    - Use Yaw Rotation (Bool)
+    - Freeze Entity (Bool)
+    - Entity Invisibility (Bool)
+
+>>> Wav Player
+    - Stop (Action)
+    - Input Any ".Wav" file (Action)
+
+>>> Disables
+    - Disable Help Text (Bool)
+    - Disable Location Info (Bool)
+    - Disable Radar When Menu Is Open (Bool)
+    - Disable Horse Whistle On Gamepad (Bool)
+    -----------------------------------------
+
+    - Seasonal Greetings (Bool)
+    - Real Alt F4 (Bool)
+    - Alt F4 (Action)
+    - Discord Presence (Bool)
+    - Reveal Map (Action)
+    - Unreveal Map (Action)
+    - Discord Link (Action)
+
+[SETTINGS]
+----------
+
+>>> Saving
+    - Auto Save (Bool)
+    - Manual Save (Action)
 
 OUR GOAL
 
