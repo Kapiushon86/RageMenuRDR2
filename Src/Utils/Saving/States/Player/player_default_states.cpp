@@ -18,6 +18,3 @@ bool player_always_show_cores_bool = false;
 bool player_always_clean_bool = false;
 
 // Vectors
-
-std::vector<std::string> superjumpOptionVector = { "Off", "On" };
-int superjumpOptionIndex = 0; 
