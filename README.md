@@ -69,7 +69,7 @@ This menu's source code is provided for transparency, learning purposes, and to 
    - The source code is provided solely for educational purposes, to demonstrate how the menu works, and to give developers ideas or inspiration. It is not intended to be a template, sample, or starting point for other projects.
 
 6. No Commercial Use  
-   - This source code and its derivatives may not be used for any commercial purposes, including selling, licensing, or monetizing in any way.
+   - This menu and its releases are free for everyone to use, but the source code is not. The source code and its derivatives may not be used for any commercial purposes, including selling, licensing, monetizing, or incorporating into any project intended for profit. Furthermore, the source code must not be repackaged or sold, whether as part of another menu, standalone product, or any other form. Any violation of this term is strictly prohibited.
 
 7. Respect the Creators  
    - All credits and acknowledgments to the original authors and contributors must remain intact. Removing or altering these is strictly prohibited.
@@ -77,7 +77,6 @@ This menu's source code is provided for transparency, learning purposes, and to 
 8. Ask for Clarification  
    - If you are unsure about any specific right or intended use, you must seek permission from the authors before proceeding. Ignorance of these terms will not be considered an excuse for violation.
 
-Violation of these terms will result in appropriate action, including but not limited to takedown requests, legal actions, or removal of access to the source code.
 
 By accessing or using this source code, you agree to adhere to these strict terms and conditions.
 
