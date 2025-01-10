@@ -51,7 +51,7 @@ Overall my setup and folder structure is well organized and neatly kept and you 
 RIGHTS
 ------
 
-This menu's source code is provided for transparency, learning purposes, and to assure users that it is safe and free of malicious content. However, strict rules govern its usage to protect the integrity of the project and the work of its creators:
+This menu's source code is provided for transparency, learning purposes, and to assure users that it is safe and free of malicious content. However, strict rules still apply:
 
 1. No Unauthorized Uploads  
    - You are strictly prohibited from uploading this mod or its source code to any website, repository, or platform without explicit written permission from the original authors.
