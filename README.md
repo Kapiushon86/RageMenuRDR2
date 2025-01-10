@@ -45,8 +45,7 @@ You will also see many folders and files or just code that dosnt really have any
 Overall my setup and folder structure is well organized and neatly kept and you should have no probelm finding everything.
 
 RIGHTS
-
-RIGHTS
+------
 
 This menu's source code is provided for transparency, learning purposes, and to assure users that it is safe and free of malicious content. However, strict rules govern its usage to protect the integrity of the project and the work of its creators:
 
