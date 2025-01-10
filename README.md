@@ -28,7 +28,7 @@ FOLDER STRUCTURE
 
 Ui/Options - Contains all option types
 
-Ui/ - Contains all ui elements drawing, writing sprites, menu version, etc basically everything you see. menu_version.h is where current version is defined, drawing.cpp handles most of the drawing but some other are done throughout ui and SubmenuIDs contains all the submenu ids which are needed when creating a new submenu.
+Ui/ - Contains all ui elements drawing, writing sprites, menu version, etc basically everything you see. Menuversion.h is where current version is defined, drawing.cpp handles most of the drawing but some other are done throughout ui and SubmenuIDs contains all the submenu ids which are needed when creating a new submenu.
 
 Thirdparty/ - Contains all third party uses, as of now its only discord presence.
 
