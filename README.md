@@ -44,5 +44,7 @@ You will also see many folders and files or just code that dosnt really have any
 
 Overall my setup and folder structure is well organized and neatly kept and you should have no probelm finding everything.
 
+[RIGHTS]
+
 ![image](https://github.com/user-attachments/assets/59c83475-5fde-42ce-b0f2-0eb22adf35c1)
 
