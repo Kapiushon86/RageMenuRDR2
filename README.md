@@ -27,7 +27,7 @@ As of January 9, 2025, RageMenu has been made open source (mostly). We welcome s
 
 If you believe something is not coded optimally or could be improved, we encourage you to inspire us with your ideas.
 
-And RageMenu will stop be receiving many updates, becoming open source will not stop this.
+And RageMenu will still be receiving many updates, becoming open source will not stop this.
 
 FOLDER STRUCTURE
 ----------------
