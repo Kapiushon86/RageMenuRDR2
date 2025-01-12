@@ -90,7 +90,7 @@ The RageMenu source code is open for you to explore and analyze. Here's how you 
 
 Examine the Codebase
 
-- Review the entire codebase, including its structure, features, and implementations. Some parts of the source code may have been intentionally left out for security or developmental purposes, but everything essential to understanding the menu is included.
+- Review the entire codebase, including its structure, features, and implementations. Some parts of the source code have been intentionally left out for security and developmental purposes, but everything essential to understanding the menu is included.
 - Provide Feedback
 
 - If you identify areas that could be optimized or improved, share your suggestions with us. Your input is valuable and can help make the menu even better.
