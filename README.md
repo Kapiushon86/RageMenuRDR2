@@ -82,5 +82,26 @@ This menu's source code is provided for transparency, learning purposes, and to 
 
 By accessing or using this source code, you agree to adhere to these strict terms and conditions.
 
+SO WHAT CAN I DO WITH THE SOURCE CODE
+-------------------------------------
+
+
+The RageMenu source code is open for you to explore and analyze. Here's how you can engage with it:
+
+Examine the Codebase
+
+- Review the entire codebase, including its structure, features, and implementations. Some parts of the source code may have been intentionally left out for security or developmental purposes, but everything essential to understanding the menu is included.
+- Provide Feedback
+
+- If you identify areas that could be optimized or improved, share your suggestions with us. Your input is valuable and can help make the menu even better.
+- Suggest New Features or Enhancements
+
+- Have ideas for features or functionality that could improve the menu? Propose them in our Discord's development category or via direct messages to the authors.
+- Improve Existing Features
+
+- If you find opportunities to enhance the functionality or performance of existing features, submit your ideas or proposed changes.
+  
+Please note that while feedback and contributions are welcome, any modifications or use of the source code must adhere to the rules outlined in the RIGHTS section. Unauthorized redistribution, repurposing, or misuse of the source code is strictly prohibited.
+
 ![image](https://github.com/user-attachments/assets/59c83475-5fde-42ce-b0f2-0eb22adf35c1)
 
