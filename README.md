@@ -88,19 +88,19 @@ SO WHAT CAN I DO WITH THE SOURCE CODE?
 
 The RageMenu source code is open for you to explore and analyze. Here's how you can engage with it:
 
-Examine the Codebase
+1. Examine the Codebase
 
 - Review the entire codebase, including its structure, features, and implementations. Some parts of the source code have been intentionally left out for security and developmental purposes, but everything essential to understanding the menu is included.
 
-Provide Feedback
+2. Provide Feedback
 
 - If you identify areas that could be optimized or improved, share your suggestions with us. Your input is valuable and can help make the menu even better.
 
-Suggest New Features or Enhancements
+3. Suggest New Features or Enhancements
 
 - Have ideas for features or functionality that could improve the menu? Propose them in our Discord's development category or via direct messages to the authors.
   
-Improve Existing Features
+4. Improve Existing Features
 
 - If you find opportunities to enhance the functionality or performance of existing features, submit your ideas or proposed changes.
   
