@@ -5,7 +5,7 @@ RageMenuRDR2 is a newly open-source project developed by Kapiushon and JJ. This 
 
 RageMenu is a single player ASI mod for Red Dead Redemption 2, built in C++ by Kapiushon and JJ. It focuses on providing useful essential features for an enhanced gameplay experience.
 
-RageMenu was designed to work independently, compatibility with other mods is not guaranteed and support cannot be offered for such other mods.
+Please Also Note That RageMenu Was Designed To Work Independently. Compatibility With Other Mods Is Not Guaranteed, And Support Cannot Be Offered For Issues Caused By Other Mods.
 
 BUILT ON A SOLID FOUNDATION
 ---------------------------
