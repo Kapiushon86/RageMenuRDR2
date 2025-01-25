@@ -4,8 +4,10 @@
 
 void MiscUpdateFeaturesLoop() {
 
+	Misc_WelcomeMessageFunction();
 	Misc_SeasonalGreetingsFunction();
-	Misc_RealAltF4Function();
 	Misc_DiscordPresenceFunction();
+	Misc_RealAltF4Function();
+	Misc_FogOfWarFunction();
    
 }

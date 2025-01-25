@@ -2,5 +2,6 @@
 #include "../settings_functions.h"   
 
 void SettingsUpdateFeaturesLoop() {
+	Settings_ShowBreadcrumbsFunction();
 
 }

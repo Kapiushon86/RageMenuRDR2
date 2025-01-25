@@ -1,5 +1,5 @@
 #include "logging_functions.h"
-#include "../../Config/settings_manager.h"
+#include "../../Config/config_manager.h"
 #include "../../../../Menu/Base/Submenus/Main/Settings/logging.h"
 #include "../../../../Utils/Saving/States/Settings/logging_default_states.h"
 #include "../../Config/config.h"
@@ -136,7 +136,7 @@ void Logging_DetailedLoggingFunction() {
 
 void Logging_ConsoleFunction() {
     if (logging_console_bool) {
-        if (!GetConsoleWindow()) { 
+        if (!GetConsoleWindow()) {
             AllocConsole();
             freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
             freopen_s((FILE**)stderr, "CONOUT$", "w", stderr);
@@ -155,7 +155,8 @@ void Logging_ConsoleFunction() {
     else {
         HWND consoleWindow = GetConsoleWindow();
         if (consoleWindow) {
-            FreeConsole(); 
+            std::cout << "Console logging is now inactive." << std::endl;
+            FreeConsole();
         }
     }
 }

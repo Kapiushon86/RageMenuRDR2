@@ -3,6 +3,7 @@
 
 void FreeCameraUpdateFeaturesLoop() {
 	FreeCamera_FreeCameraFunction();
+	FreeCamera_FreezeEntityFunction();
 	FreeCamera_EntityInvisibilityFunction();
 
 }

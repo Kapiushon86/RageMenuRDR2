@@ -3,6 +3,8 @@
 #include "../../Saving/States/Player/no_clip_default_states.h" 
 #include <cmath>
 
+// Ngl I think I have a better no clip functionality then most other menus, Def better then how Rampage does there no clip...just sayin lol
+
 #define PI 3.1415927f
 
 float NoClip_GetYawRotation() {
@@ -53,18 +55,18 @@ void NoClip_NoClipFunction() {
 
         Vector3 movement = { 0.0f, 0.0f, 0.0f };
 
+        // Handle forward/backward movement
         if (PAD::IS_CONTROL_PRESSED(0, INPUT_MOVE_UP_ONLY)) {
             movement.x += camForward.x * currentSpeed;
             movement.y += camForward.y * currentSpeed;
-            movement.z += camForward.z * currentSpeed;
         }
 
-        if (PAD::IS_CONTROL_PRESSED(0, INPUT_MOVE_DOWN_ONLY) || PAD::IS_CONTROL_PRESSED(0, INPUT_DUCK)) {
+        if (PAD::IS_CONTROL_PRESSED(0, INPUT_MOVE_DOWN_ONLY)) {
             movement.x -= camForward.x * currentSpeed;
             movement.y -= camForward.y * currentSpeed;
-            movement.z -= camForward.z * currentSpeed;
         }
 
+        // Handle left/right movement
         if (PAD::IS_CONTROL_PRESSED(0, INPUT_MOVE_LEFT_ONLY)) {
             movement.x -= camRight.x * currentSpeed;
             movement.y -= camRight.y * currentSpeed;
@@ -75,20 +77,24 @@ void NoClip_NoClipFunction() {
             movement.y += camRight.y * currentSpeed;
         }
 
+        // Handle upward (Sprint) and downward (Duck) movement
         if (PAD::IS_CONTROL_PRESSED(0, INPUT_SPRINT)) {
-            movement.z += currentSpeed;
+            movement.z += currentSpeed; // Straight up
         }
 
         if (PAD::IS_CONTROL_PRESSED(0, INPUT_DUCK)) {
-            movement.z -= currentSpeed;
+            movement.z -= currentSpeed; // Straight down
         }
 
+        // Apply the movement to the current position
         currentPosition.x += movement.x;
         currentPosition.y += movement.y;
         currentPosition.z += movement.z;
 
+        // Set the new position
         ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, currentPosition.x, currentPosition.y, currentPosition.z, false, false, false);
 
+        // Update mount and vehicle positions (if any)
         if (mount != NULL) {
             Vector3 mountPosition = ENTITY::GET_ENTITY_COORDS(mount, true, false);
             mountPosition.x += movement.x;
@@ -106,6 +112,7 @@ void NoClip_NoClipFunction() {
 
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, vehiclePosition.x, vehiclePosition.y, vehiclePosition.z, false, false, false);
         }
+
     }
     else {
         if (initialized) {
@@ -176,4 +183,3 @@ void NoClip_FreezeEntityFunction() {
 void NoClip_NoClipSpeedFunction() {
     float currentSpeed = std::stof(noclipSpeed[noclipSpeedIndex]);
 }
-

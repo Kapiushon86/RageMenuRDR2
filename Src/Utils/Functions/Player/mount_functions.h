@@ -4,24 +4,16 @@
 #include <vector>
 #include <string>
 
-enum MountTarget {
-    MOUNT_CURRENT,
-    MOUNT_OWNED
-};
-
 enum AttributeCore {
     ATTRIBUTE_CORE_HEALTH = 0,
     ATTRIBUTE_CORE_STAMINA = 1,
     ATTRIBUTE_CORE_DEADEYE = 2
 };
 
-extern MountTarget mount_target_preference; 
-
-MountTarget StringToMountTargetEnum(const std::string& preference);
-
-void Mount_PreferenceFunction(MountTarget preference);
+void Mount_DismountFunction();
 void Mount_InvincibilityFunction();
 void Mount_InvisibilityFunction();
+void Mount_LevitateFunction();
 void Mount_InfiniteStaminaFunction();
 void Mount_RefillAllCoresFunction();
 void Mount_RefillHealthCoreFunction();

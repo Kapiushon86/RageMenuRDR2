@@ -116,6 +116,7 @@ void FreeCamera_FreeCameraFunction() {
         if (freecamera_entity_invisibility_bool) {
             if (!wasInvisible) {
                 ENTITY::SET_ENTITY_VISIBLE(playerPed, false);
+                wasInvisible = true;
             }
         }
         else {
@@ -124,7 +125,9 @@ void FreeCamera_FreeCameraFunction() {
                 wasInvisible = false;
             }
         }
+
     }
+
     else {
         if (freeCamHandle != 0) {
             CAM::SET_CAM_ACTIVE(freeCamHandle, false);

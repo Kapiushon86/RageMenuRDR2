@@ -22,6 +22,19 @@ enum eUIFeedChannel
     kFeedChannel_Count = 14,
 };
 
+void Disables_DisableAllHudFunction() {
+    if (disables_disable_all_hud_bool) {
+        HUD::HIDE_HUD_AND_RADAR_THIS_FRAME();
+    }
+}
+
+void Disables_DisableSimpleHudFunction() {
+    if (disables_disable_simple_hud_bool) {
+        HUD::_HIDE_HUD_THIS_FRAME();
+
+    }
+}
+
 void Disables_DisableHelpTextFunction() {
     if (disables_disable_help_text_bool) {
         UIFEED::UI_FEED_CLEAR_CHANNEL(kFeedChannel_Help, true, true);
@@ -34,10 +47,10 @@ void Disables_DisableLocationInfoFunction() {
     }
 }
 
-void Disables_DisableRadarWhenMenuOpenFunction() {
-// Done inside Ui/Menu.cpp
+void Disables_DisableRadarWhenMenuOpenIsFunction() {
+    // Done inside Ui/Menu.cpp
 }
 
-void Disables_DisableHorseWhistlingFunction() {
-// Done inside Ui/Menu.cpp
+void Disables_DisableHorseWhistleOnControllerFunction() {
+    // Done inside Ui/menu.cpp
 }

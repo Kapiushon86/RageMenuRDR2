@@ -12,6 +12,8 @@
 #include <fstream>
 #include <future>
 
+// Plan to redo all this, use a third party library so i dont have to rely on default os. Cant change volume without changing windows volume etc.
+
 namespace fs = std::filesystem;
 
 const std::string WAV_PLAYER_FOLDER = "WavPlayer";

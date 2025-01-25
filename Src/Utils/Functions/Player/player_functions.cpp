@@ -56,6 +56,26 @@ void Player_LawlessFunction() {
     }
 }
 
+void Player_ClearPursuitFunction() {
+    int playerId = PLAYER::PLAYER_ID();
+
+    if (PLAYER::IS_PLAYER_PLAYING(playerId)) {
+        {
+            PLAYER::CLEAR_PLAYER_WANTED_LEVEL(playerId);
+            LAW::CLEAR_WANTED_SCORE(playerId);
+            LAW::_SET_BOUNTY_HUNTER_PURSUIT_CLEARED();
+            PLAYER::SET_MAX_WANTED_LEVEL(0);
+            PLAYER::SET_WANTED_LEVEL_MULTIPLIER(0.0f);
+            PLAYER::SUPPRESS_WITNESSES_CALLING_POLICE_THIS_FRAME(playerId);
+
+        }
+    }
+    else {
+        PLAYER::SET_MAX_WANTED_LEVEL(5);
+        PLAYER::SET_WANTED_LEVEL_MULTIPLIER(1.0f);
+    }
+}
+
 void Player_AutoPayBountyFunction() {
     if (player_auto_pay_bounty_bool) {
         Player player = PLAYER::PLAYER_ID();
@@ -65,6 +85,27 @@ void Player_AutoPayBountyFunction() {
         if (bountyAmount > 0 && playerMoney >= bountyAmount) {
             MONEY::_MONEY_DECREMENT_CASH_BALANCE(bountyAmount);
             LAW::CLEAR_BOUNTY(player);
+        }
+    }
+}
+
+void Player_LevitateFunction() {
+    Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+    if (ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(playerPed)) {
+        if (player_levitate_bool) {
+            if (PAD::IS_CONTROL_PRESSED(0, INPUT_JUMP)) {
+                Vector3 currentVelocity = ENTITY::GET_ENTITY_VELOCITY(playerPed, 0);
+
+                Vector3 superJumpVelocity = { currentVelocity.x, currentVelocity.y, 10.0f };
+
+                ENTITY::SET_ENTITY_VELOCITY(playerPed, superJumpVelocity.x, superJumpVelocity.y, superJumpVelocity.z);
+
+                PED::SET_PED_CAN_RAGDOLL(playerPed, false);
+            }
+        }
+        else {
+            PED::SET_PED_CAN_RAGDOLL(playerPed, true);
         }
     }
 }
@@ -151,6 +192,10 @@ void Player_QuickSkinFunction() {
             }
         }
     }
+}
+
+void Player_NeverLooseHatFunction() {
+   
 }
 
 void Player_ClimbSteepSlopesFunction() {

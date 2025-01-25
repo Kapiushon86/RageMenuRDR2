@@ -3,9 +3,11 @@
 
 void DisablesUpdateFeaturesLoop() {
 
+	Disables_DisableAllHudFunction();
+	Disables_DisableSimpleHudFunction();
 	Disables_DisableHelpTextFunction();
 	Disables_DisableLocationInfoFunction();
-	Disables_DisableRadarWhenMenuOpenFunction();
-	Disables_DisableHorseWhistlingFunction();
+	Disables_DisableRadarWhenMenuOpenIsFunction();
+	Disables_DisableHorseWhistleOnControllerFunction();
 
 }

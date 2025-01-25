@@ -4,7 +4,8 @@
 
 void MountUpdateFeaturesLoop() {
 
-    Mount_PreferenceFunction(mount_target_preference);
+    //Mount_PreferenceFunction(mount_target_preference);
+    Mount_LevitateFunction();
     Mount_FearlessFunction();
     Mount_AlwaysShowCoresFunction();
     Mount_AlwaysCleanFunction();

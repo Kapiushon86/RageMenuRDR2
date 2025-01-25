@@ -60,6 +60,10 @@ void TerminateGame()
     }
 }
 
+void Misc_WelcomeMessageFunction() {
+
+}
+
 void Misc_SeasonalGreetingsFunction() {
     if (greetingDisplayed || !misc_seasonal_greetings_bool) return;
 
@@ -91,6 +95,38 @@ void Misc_SeasonalGreetingsFunction() {
     }
 }
 
+static bool discordInitialized = false;
+static time_t discordStartTimestamp = 0; // Track the starting time
+
+void Misc_DiscordPresenceFunction() {
+    if (misc_discord_presence_bool) {
+        if (!discordInitialized) {
+            Discord_Initialize("1310430706618597376", nullptr, true, nullptr);
+            discordInitialized = true;
+
+            // Set startTimestamp only once when enabling
+            discordStartTimestamp = time(nullptr);
+        }
+
+        DiscordRichPresence discordPresence;
+        memset(&discordPresence, 0, sizeof(discordPresence));
+
+        discordPresence.startTimestamp = discordStartTimestamp;
+        discordPresence.state = "Inside Rockstar's Advanced Game Engine Menu";
+
+        Discord_UpdatePresence(&discordPresence);
+    }
+    else {
+        if (discordInitialized) {
+            Discord_ClearPresence();
+            Discord_Shutdown();
+            discordInitialized = false;
+
+            discordStartTimestamp = 0;
+        }
+    }
+}
+
 void Misc_RealAltF4Function() {
     if (misc_real_alt_f4_bool && !altF4Running.load()) {
         altF4Running.store(true);
@@ -111,35 +147,14 @@ void Misc_AltF4Function() {
     TerminateGame();
 }
 
-static bool discordInitialized = false;
-
-void Misc_DiscordPresenceFunction() {
-    if (misc_discord_presence_bool) {
-        if (!discordInitialized) {
-            Discord_Initialize("1310430706618597376", nullptr, true, nullptr);
-            discordInitialized = true;
-        }
-
-        DiscordRichPresence discordPresence;
-        memset(&discordPresence, 0, sizeof(discordPresence));
-
-        time_t now = time(nullptr);
-        discordPresence.startTimestamp = now;
-        discordPresence.state = "Inside Rockstar's Advanced Game Engine Menu";
-
-        Discord_UpdatePresence(&discordPresence);
+void Misc_FogOfWarFunction() {
+    if (misc_fog_of_war_bool) {
+    MAP::SET_MINIMAP_HIDE_FOW(TRUE);
     }
     else {
-        if (discordInitialized) {
-            Discord_ClearPresence();
-            Discord_Shutdown();
-            discordInitialized = false;
-        }
+        MAP::SET_MINIMAP_HIDE_FOW(FALSE);
     }
 }
-
-
-
 
 void Misc_RevealMapFunction() {
     MAP::SET_MINIMAP_HIDE_FOW(TRUE);
@@ -147,42 +162,6 @@ void Misc_RevealMapFunction() {
 
 void Misc_UnrevealMapFunction() {
     MAP::SET_MINIMAP_HIDE_FOW(FALSE);
-}
-
-void Misc_DiscordLinkFunction() {
-    static bool linkCopied = false;
-    if (!linkCopied) {
-        const std::string discordLink = "https://discord.gg/FMcy3Sxq6T";
-        if (OpenClipboard(nullptr)) {
-            EmptyClipboard();
-            size_t linkSize = discordLink.size() + 1;
-            std::vector<char> buffer(linkSize);
-            std::memcpy(buffer.data(), discordLink.c_str(), linkSize);
-
-            HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE, linkSize);
-            if (hGlobal) {
-                LPVOID pGlobal = GlobalLock(hGlobal);
-                if (pGlobal) {
-                    std::memcpy(pGlobal, buffer.data(), linkSize);
-                    GlobalUnlock(pGlobal);
-                    SetClipboardData(CF_TEXT, hGlobal);
-                    UIUtil::PrintSubtitle("Discord link copied to your clipboard.");
-                    linkCopied = true;
-                }
-                else {
-                    UIUtil::PrintSubtitle("Failed to lock global memory.");
-                }
-                GlobalFree(hGlobal);
-            }
-            else {
-                UIUtil::PrintSubtitle("Failed to allocate global memory.");
-            }
-            CloseClipboard();
-        }
-        else {
-            UIUtil::PrintSubtitle("Failed to open clipboard.");
-        }
-    }
 }
 
 void Misc_BypassStartupIntrosFunction() {
