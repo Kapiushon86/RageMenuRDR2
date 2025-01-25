@@ -10,7 +10,7 @@ const size_t maxFileNameLength = 25;
 
 void CWav_PlayerSubmenu::Init()
 {
-    g_Menu->AddSubmenu("RageMenu", "Wav Player", Submenu_wav_player, submenuPriority, [](Submenu* sub)
+    g_Menu->AddSubmenu("RageMenu", "Main > Misc > Wav Player", Submenu_wav_player, submenuPriority, [](Submenu* sub)
         {
           /*  sub->AddBoolOption("Loop", "", &wavplayer_loop_bool_value, [] {
                 WavPlayer_loopFunction();
@@ -61,12 +61,15 @@ void CWav_PlayerSubmenu::Init()
                     size_t displayNameLength = displayName.length();
 
                     if (displayNameLength > maxFileNameLength) {
-                        std::string message = "\"" + displayName + "\" is " + std::to_string(displayNameLength) + " characters long. Max is " + std::to_string(maxFileNameLength) + " characters.";
+                        std::string message = "\"" + displayName + "\" is " + std::to_string(displayNameLength) +
+                            " characters long. Max is " + std::to_string(maxFileNameLength) + " characters.";
                         sub->AddRegularOption("~COLOR_RED~" + message, "", [] {});
                     }
                     else {
-                        sub->AddRegularOption(displayName.c_str(), "", [fileName] {
+                        sub->AddRegularOption(displayName.c_str(), "", [fileName, displayName] {
                             try {
+                                UIUtil::PrintSubtitle("~COLOR_WHITE~Now playing: " + displayName);
+
                                 PlayWavFileMCI(fileName);
                             }
                             catch (const std::exception& e) {

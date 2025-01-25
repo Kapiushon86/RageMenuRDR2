@@ -14,7 +14,7 @@ void CRecoverySubmenu::Init()
     g_MoneySubmenu = new CMoneySubmenu();
     g_MoneySubmenu->Init();
 
-    g_Menu->AddSubmenu("RageMenu", "Recovery", Submenu_recovery, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > Recovery", Submenu_recovery, submenuPriority, [](Submenu* sub) {
 
         sub->AddSubmenuOption("Money", "", Submenu_money);
        

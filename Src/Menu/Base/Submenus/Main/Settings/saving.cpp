@@ -10,9 +10,9 @@ void CSavingSubmenu::Init()
 {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "Saving", Submenu_saving, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > Settings > Saving", Submenu_saving, submenuPriority, [](Submenu* sub) {
 
-        sub->AddBoolOption("Auto Save", "", &saving_auto_save_bool, [] {
+        sub->AddBoolOption("Auto Save", "Automatically Save Toggle States To Config", &saving_auto_save_bool, [] {
             Saving_AutoSaveFunction();
             });
 
@@ -26,7 +26,7 @@ void CSavingSubmenu::Init()
 
             */
 
-        sub->AddRegularOption("Manual Save", "", [] {
+        sub->AddRegularOption("Manual Save", "Manully Save The Current Toggle States To Config", [] {
             Saving_ManualSaveFunction();
             });
         });

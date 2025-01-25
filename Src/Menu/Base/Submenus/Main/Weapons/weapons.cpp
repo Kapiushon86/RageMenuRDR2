@@ -9,17 +9,17 @@ void CWeaponsSubmenu::Init()
 {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "Weapons", Submenu_weapons, submenuPriority, [](Submenu* sub) {
-
-        sub->AddRegularOption("Lock All Weapons", "", [] {
-            Weapon_LockAllFunction();
-            });
+    g_Menu->AddSubmenu("RageMenu", "Main > Weapons", Submenu_weapons, submenuPriority, [](Submenu* sub) {
 
         sub->AddRegularOption("Unlock All Weapons", "", [] {
             Weapon_UnlockAllFunction();
             });
 
-        sub->AddRegularOption("Add All Weapons", "Weapons need to be unlocked in order for you to obtain.", [] {
+        sub->AddRegularOption("Lock All Weapons", "", [] {
+            Weapon_LockAllFunction();
+            });
+
+        sub->AddRegularOption("Add All Weapons", "Weapons Need To Be Unlocked In Order For You To Obtain.", [] {
             Weapon_AddAllWeaponsFunction();
             });
 
@@ -28,7 +28,7 @@ void CWeaponsSubmenu::Init()
             Weapon_RemoveAllWeaponsFunction();
             });
 
-        sub->AddRegularOption("Add All Ammo", "Adds max ammo of each type.", [] {
+        sub->AddRegularOption("Add All Ammo", "Adds Max Ammo Of Each Type.", [] {
             Weapon_AddAllAmmoFunction();
             });
 
@@ -42,6 +42,10 @@ void CWeaponsSubmenu::Init()
             Weapon_InfiniteClipFunction();
             });
 
+        sub->AddBoolOption("Rapid Fire", "", &weapon_rapid_fire_bool, [] {
+            Weapon_RapidFireFunction();
+            });
+
         sub->AddBoolOption("One Shot Kill", "", &weapon_one_shot_kill_bool, [] {
             Weapon_OneShotKillFunction();
             });
@@ -53,6 +57,15 @@ void CWeaponsSubmenu::Init()
         sub->AddBoolOption("No Spread", "", &weapon_no_spread_bool, [] {
             Weapon_NoSpreadFunction();
             });
+
+        sub->AddBoolOption("No Weapon Wheel Slow Down", "", &weapon_no_weapon_wheel_slow_down_bool, [] {
+            Weapon_NoWeaponWheelSlowDownFunction();
+            });
+
+         /*sub->AddBoolOption("Always Kill Cam", "", &weapon_always_kill_cam_bool, [] {
+            Weapon_AlwaysKillCamFunction();
+            });
+            */
 
        /* sub->AddBoolOption("Bleed Out", "", &weapon_bleed_out_bool, [] {
             Weapon_BleedOutFunction();
@@ -71,11 +84,6 @@ void CWeaponsSubmenu::Init()
         sub->AddRegularOption("Clean", "", [] {
             Weapon_CleanFunction();
             });
-
-       /* sub->AddBoolOption("Always Kill Cam", "", &weapon_always_kill_cam_bool, [] {
-            Weapon_AlwaysKillCamFunction();
-            });
-            */
 
         });
 }

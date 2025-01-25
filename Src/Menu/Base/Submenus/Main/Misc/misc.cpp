@@ -3,6 +3,7 @@
 #include "wav_player.h"
 #include "disables.h"
 #include "bypasses.h"
+#include "links.h"
 #include "../../../../../Utils/Saving/States/Misc/misc_default_states.h"
 #include "../../../../../Utils/Functions/Misc/misc_functions.h"
 
@@ -16,20 +17,24 @@ void CMiscSubmenu::Init()
     g_FreecameraSubmenu = new CFreecameraSubmenu();
     g_FreecameraSubmenu->Init();
 
-    g_Wav_PlayerSubmenu = new CWav_PlayerSubmenu();
-    g_Wav_PlayerSubmenu->Init();
-
     g_DisablesSubmenu = new CDisablesSubmenu();
     g_DisablesSubmenu->Init();
 
-  //  g_BypassesSubmenu = new CBypassesSubmenu();
+    //g_BypassesSubmenu = new CBypassesSubmenu();
     //g_BypassesSubmenu->Init();
 
-    g_Menu->AddSubmenu("RageMenu", "Misc", Submenu_misc, submenuPriority, [](Submenu* sub) {
+    g_Wav_PlayerSubmenu = new CWav_PlayerSubmenu();
+    g_Wav_PlayerSubmenu->Init();
+
+    g_LinksSubmenu = new CLinksSubmenu();
+    g_LinksSubmenu->Init();
+
+    g_Menu->AddSubmenu("RageMenu", "Main > Misc", Submenu_misc, submenuPriority, [](Submenu* sub) {
         sub->AddSubmenuOption("Free Camera", "", Submenu_free_camera);
-        sub->AddSubmenuOption("Wav Player", "", Submenu_wav_player);
         sub->AddSubmenuOption("Disables", "", Submenu_disables);
-      //  sub->AddSubmenuOption("Bypasses", "", Submenu_bypasses);
+      //sub->AddSubmenuOption("Bypasses", "", Submenu_bypasses);
+        sub->AddSubmenuOption("Wav Player", "", Submenu_wav_player);
+        sub->AddSubmenuOption("Links", "", Submenu_links);
         sub->AddEmptyOption("Settings");
 
         /*sub->AddBoolOption("Online Checks", "Prevents you from going online if ScriptHook fails.", &misc_online_checks_bool, [] {
@@ -37,8 +42,16 @@ void CMiscSubmenu::Init()
             });
             */
 
-        sub->AddBoolOption("Seasonal Greetings", "", &misc_seasonal_greetings_bool, [] {
+        sub->AddBoolOption("Welcome Message", "Show Welcome Message On Startup", &misc_welcome_message_bool, [] {
+            Misc_WelcomeMessageFunction();
+            });
+
+        sub->AddBoolOption("Seasonal Greetings", "Special Greetings On Seasonal Holidays", &misc_seasonal_greetings_bool, [] {
             Misc_SeasonalGreetingsFunction();
+            });
+
+        sub->AddBoolOption("Discord Presence", "Discord Status Update", &misc_discord_presence_bool, [] {
+            Misc_DiscordPresenceFunction();
             });
 
         sub->AddBoolOption("Real Alt F4", "Bypass All Exit Prompts. (Alt + F4)", &misc_real_alt_f4_bool, [] {
@@ -54,8 +67,8 @@ void CMiscSubmenu::Init()
             });
             */
 
-        sub->AddBoolOption("Discord Presence", "", &misc_discord_presence_bool, [] {
-            Misc_DiscordPresenceFunction();
+        sub->AddBoolOption("Fog Of War", "Reveal Fog Of War", &misc_fog_of_war_bool, [] {
+            Misc_FogOfWarFunction();
             });
 
         sub->AddRegularOption("Reveal Map", "", [] {
@@ -64,11 +77,6 @@ void CMiscSubmenu::Init()
 
         sub->AddRegularOption("Unreveal Map", "", [] {
             Misc_UnrevealMapFunction();
-            });
-                 
-
-        sub->AddRegularOption("Discord Link", "Join The RageMenu Community.", [] {
-            Misc_DiscordLinkFunction();
             });
 
         /* sub->AddRegularOption("Skip Cutscene", "", [] {

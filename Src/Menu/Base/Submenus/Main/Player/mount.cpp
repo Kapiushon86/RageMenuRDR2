@@ -10,10 +10,10 @@ void CMountSubmenu::Init()
 {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "Mount", Submenu_mount, submenuPriority, [](Submenu* sub)
+    g_Menu->AddSubmenu("RageMenu", "Main > Player > Mount", Submenu_mount, submenuPriority, [](Submenu* sub)
         {
 
-            sub->AddVectorOption("Preference", "", preferenceOptionVector, [] {
+          /*  sub->AddVectorOption("Preference", "", preferenceOptionVector, [] {
                 if (preferenceOptionIndex < preferenceOptionVector.size() - 1) {
                     preferenceOptionIndex++;
                 }
@@ -24,8 +24,9 @@ void CMountSubmenu::Init()
                 MountTarget preference = StringToMountTargetEnum(preferenceString);
                 Mount_PreferenceFunction(preference);
                 });
+                */
 
-            sub->AddEmptyOption("Settings");
+          //  sub->AddEmptyOption("Settings");
 
             sub->AddBoolOption("Invincibility", "", &mount_invincibility_bool, [=] {
                 Mount_InvincibilityFunction();
@@ -33,6 +34,10 @@ void CMountSubmenu::Init()
 
             sub->AddBoolOption("Invisibility", "", &mount_invisibility_bool, [=] {
                 Mount_InvisibilityFunction();
+                });
+
+            sub->AddBoolOption("Levitate", "Hold Your Jump Button.", &mount_levitate_bool, [=] {
+                Mount_LevitateFunction();
                 });
 
            sub->AddBoolOption("Infinite Stamina", "", &mount_infinite_stamina_bool, [=] {
@@ -95,7 +100,7 @@ void CMountSubmenu::Init()
                 });
                 */
 
-            sub->AddRegularOption("Suicide", "", [] {
+            sub->AddRegularOption("Suicide", "Yes This Will Bypass Invincibility.", [] {
                 Mount_SuicideFunction();
                 });
 

@@ -8,7 +8,7 @@ CTimeSubmenu* g_TimeSubmenu = nullptr;
 const int submenuPriority = 8;
 
 void CTimeSubmenu::Init() {
-    g_Menu->AddSubmenu("RageMenu", "Time", Submenu_time, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > World > Time", Submenu_time, submenuPriority, [](Submenu* sub) {
 
         sub->AddBoolOption("Freeze Time", "", &time_freeze_time_bool, [] {
             Time_FreezeTimeFunction();
@@ -18,7 +18,7 @@ void CTimeSubmenu::Init() {
             Time_LoopTimeFunction();
             });
 
-        sub->AddBoolOption("Sync With System", "", &time_sync_with_system_bool, [] {
+        sub->AddBoolOption("Sync With System", "Sync Game Time With Your Local System Time ", &time_sync_with_system_bool, [] {
             Time_SyncWithSystemFunction();
             });
 

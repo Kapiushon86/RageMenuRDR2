@@ -18,11 +18,11 @@ void CSettingsSubmenu::Init() {
     g_LoggingSubmenu = new CLoggingSubmenu();
     g_LoggingSubmenu->Init();
 
-    g_Menu->AddSubmenu("RageMenu", "Settings", Submenu_settings, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > Settings", Submenu_settings, submenuPriority, [](Submenu* sub) {
 
         sub->AddSubmenuOption("Saving", "", Submenu_saving);
 
-      //  sub->AddSubmenuOption("Logging", "", Submenu_logging);
+        sub->AddSubmenuOption("Logging", "", Submenu_logging);
 
         /*sub->AddRegularOption("Unload Menu", "", [] {
             Settings_UnloadMenuFunction();
@@ -31,10 +31,11 @@ void CSettingsSubmenu::Init() {
 
       //  sub->AddEmptyOption("Settings");
 
-        /*sub->AddBoolOption("Show Breadcrumbs", "", &settings_show_breadcrumbs_bool, [] {
+       /* sub->AddBoolOption("Show Breadcrumbs", "", &settings_show_breadcrumbs_bool, [] {
             Settings_ShowBreadcrumbsFunction();
             });
             */
+            
        
         });
 

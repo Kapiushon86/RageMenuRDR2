@@ -2,13 +2,13 @@
 #include "no_clip.h"
 #include "mount.h"
 #include "vehicle.h"
+#include "modifiers.h"
+#include "proofs.h"
 #include "model.h"
 #include "model_changer.h"
 #include "effects.h"
 #include "effects_screen.h"
 #include "effects_particles.h"
-#include "modifiers.h"
-#include "../Misc/wav_player.h"
 #include "../../../../../Utils/Saving/States/Player/player_default_states.h"
 #include "../../../../../Utils/Functions/Player/player_functions.h"
 
@@ -37,6 +37,9 @@ void CPlayerSubmenu::Init() {
 
     g_ModifiersSubmenu = new CModifiersSubmenu();
     g_ModifiersSubmenu->Init();
+
+    g_ProofsSubmenu = new CProofsSubmenu();
+    g_ProofsSubmenu->Init();
     
     /*
     g_EffectsSubmenu = new CEffectsSubmenu();
@@ -49,12 +52,13 @@ void CPlayerSubmenu::Init() {
     g_Effects_ParticlesSubmenu = new CEffects_ParticlesSubmenu();
     g_Effects_ParticlesSubmenu->Init();
 
-    g_Menu->AddSubmenu("RageMenu", "Player", Submenu_player, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > Player", Submenu_player, submenuPriority, [](Submenu* sub) {
         sub->AddSubmenuOption("No Clip", "", Submenu_no_clip);
         sub->AddSubmenuOption("Mount", "", Submenu_mount);
         sub->AddSubmenuOption("Vehicle", "", Submenu_vehicle);
         // sub->AddSubmenuOption("Model", "", Submenu_model);
         sub->AddSubmenuOption("Modifiers", "", Submenu_modifiers);
+      //  sub->AddSubmenuOption("Proofs", "", Submenu_proofs);
         // sub->AddSubmenuOption("Effects", "", Submenu_effects);
 
         sub->AddEmptyOption("Settings");
@@ -71,10 +75,19 @@ void CPlayerSubmenu::Init() {
             Player_LawlessFunction();
             });
 
+      /*  sub->AddRegularOption("Clear Pursuit", "", [] {
+            Player_ClearPursuitFunction();
+            });
+            */
+
        /* sub->AddBoolOption("Auto Pay Bounty", "", &player_auto_pay_bounty_bool, [] {
             Player_AutoPayBountyFunction();
             });
             */
+
+        sub->AddBoolOption("Levitate", "Hold Your Jump Button.", &player_levitate_bool, [=] {
+            Player_LevitateFunction();
+            });
 
         sub->AddBoolOption("Super Jump", "", &player_super_jump_bool, [] {
             Player_SuperJumpFunction();
@@ -109,6 +122,12 @@ void CPlayerSubmenu::Init() {
             Player_QuickSkinFunction();
             });
 
+      /*  sub->AddBoolOption("Never Loose Hat", "", &player_never_loose_hat_bool, [] {
+            Player_NeverLooseHatFunction();
+            });
+
+            */
+
         sub->AddBoolOption("Always Show Cores", "", &player_always_show_cores_bool, [] {
             Player_AlwaysShowCoresFunction();
             });
@@ -126,7 +145,7 @@ void CPlayerSubmenu::Init() {
             });
             */
 
-        sub->AddRegularOption("Suicide", "", [] {
+        sub->AddRegularOption("Suicide", "Yes This Will Bypass Invincibility.", [] {
             Player_SuicideFunction();
             });
 

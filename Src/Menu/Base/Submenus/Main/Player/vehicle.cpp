@@ -8,7 +8,7 @@ CVehicleSubmenu* g_VehicleSubmenu = nullptr;
 void CVehicleSubmenu::Init() {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "Vehicle", Submenu_vehicle, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > Player > Vehicle", Submenu_vehicle, submenuPriority, [](Submenu* sub) {
 
         sub->AddBoolOption("Invincibility", "", &vehicle_invincibility_bool, [=] {
             Vehicle_InvincibilityFunction();

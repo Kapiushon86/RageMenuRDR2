@@ -8,7 +8,7 @@ CWeatherSubmenu* g_WeatherSubmenu = nullptr;
 const int submenuPriority = 8;
 
 void CWeatherSubmenu::Init() {
-    g_Menu->AddSubmenu("RageMenu", "Weather", Submenu_weather, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > World > Weather", Submenu_weather, submenuPriority, [](Submenu* sub) {
 
         sub->AddBoolOption("Freeze Weather", "", &weather_freeze_weather_bool, [] {
             Weather_FreezeWeatherFunction();
@@ -18,7 +18,7 @@ void CWeatherSubmenu::Init() {
             Weather_LoopWeatherFunction();
             });
 
-        sub->AddBoolOption("Ground Snow", "", &weather_ground_snow_bool, [] {
+        sub->AddBoolOption("Ground Snow", "Cover The Ground With Snow", &weather_ground_snow_bool, [] {
             Weather_GroundSnowFunction();
             });
 

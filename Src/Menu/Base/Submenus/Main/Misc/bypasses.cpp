@@ -9,7 +9,7 @@ const int submenuPriority = 8;
 
 void CBypassesSubmenu::Init()
 {
-    g_Menu->AddSubmenu("RageMenu", "Bypasses", Submenu_bypasses, submenuPriority, [](Submenu* sub)
+    g_Menu->AddSubmenu("RageMenu", "Main > Misc > Bypasses", Submenu_bypasses, submenuPriority, [](Submenu* sub)
         {
             sub->AddBoolOption("Guard Zones", "Enter Restricted Areas", &bypasses_guard_zones_bool, [] {
                 Bypasses_GuardZonesFunction();

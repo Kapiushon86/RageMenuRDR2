@@ -10,14 +10,14 @@ void CNoclipSubmenu::Init()
 {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "No Clip", Submenu_no_clip, submenuPriority, [](Submenu* sub)
+    g_Menu->AddSubmenu("RageMenu", "Main > Player > No Clip", Submenu_no_clip, submenuPriority, [](Submenu* sub)
         {
 
-            sub->AddBoolOption("No Clip", "W A S D to move, Shift up, Ctrl down", &noclip_no_clip_bool, [] {
+            sub->AddBoolOption("No Clip", "W A S D To Move, Shift Up, Ctrl Down, Use Mouse.", &noclip_no_clip_bool, [] {
                 NoClip_NoClipFunction();
                 });
 
-            sub->AddBoolOption("Use Yaw Rotation", "Updates Movement On Yaw Axis", &noclip_use_yaw_rotation_bool, [] {
+            sub->AddBoolOption("Use Yaw Rotation", "Movement Is Based On Camera Rotation", &noclip_use_yaw_rotation_bool, [] {
                 NoClip_UseYawRotationFunction();
                 });
 

@@ -10,7 +10,7 @@ void CAddSubmenu::Init()
     const int submenuPriority = 8;
 
 
-    g_Menu->AddSubmenu("RageMenu", "Add", Submenu_add, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > Recovery > Money > Add", Submenu_add, submenuPriority, [](Submenu* sub) {
 
         sub->AddBoolOption("10k Loop", "", &recovery_add_10k_loop_bool, [] {
             Add_Add10kLoopFunction();

@@ -17,7 +17,7 @@ void CMoneySubmenu::Init() {
     g_RemoveSubmenu = new CRemoveSubmenu();
     g_RemoveSubmenu->Init();
 
-    g_Menu->AddSubmenu("RageMenu", "Money", Submenu_money, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > Recovery > Money", Submenu_money, submenuPriority, [](Submenu* sub) {
 
         sub->AddSubmenuOption("Add", "", Submenu_add);
 

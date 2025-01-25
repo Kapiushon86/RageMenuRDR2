@@ -10,14 +10,14 @@ void CFreecameraSubmenu::Init()
 {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "Free Camera", Submenu_free_camera, submenuPriority, [](Submenu* sub)
+    g_Menu->AddSubmenu("RageMenu", "Main > Misc > Free Camera", Submenu_free_camera, submenuPriority, [](Submenu* sub)
         {
 
-            sub->AddBoolOption("Free Camera", "W A S D to move, Shift up, Ctrl down", &freecamera_free_camera_bool, [] {
+            sub->AddBoolOption("Free Camera", "W A S D To Move, Shift Up, Ctrl Down, Use Mouse.", &freecamera_free_camera_bool, [] {
                 FreeCamera_FreeCameraFunction();
                 });
 
-            sub->AddBoolOption("Use Yaw Rotation", "Updates Movement On Yaw Axis", &freecamera_use_yaw_rotation_bool, [] {
+            sub->AddBoolOption("Use Yaw Rotation", "Movement Is Based On Camera Rotation", &freecamera_use_yaw_rotation_bool, [] {
                 FreeCamera_UseYawRotationFunction();
                 });
 

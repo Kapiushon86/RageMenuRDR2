@@ -10,21 +10,20 @@ void CLoggingSubmenu::Init()
 {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "Logging", Submenu_logging, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > Settings > Logging", Submenu_logging, submenuPriority, [](Submenu* sub) {
 
-        sub->AddBoolOption("Logging", "Log output to RageMenu.log.", &logging_logging_bool, [] {
+        sub->AddBoolOption("Logging", "Log Output To RageMenu.log.", &logging_logging_bool, [] {
             Logging_LoggingFunction();
             });
 
-        sub->AddBoolOption("Detailed Logging", "Log more detailed information.", &logging_detailed_logging_bool, [] {
+      /*  sub->AddBoolOption("Detailed Logging", "Log More Detailed Information.", &logging_detailed_logging_bool, [] {
             Logging_DetailedLoggingFunction();
             });
 
-        sub->AddBoolOption("Console", "Log output to an external Console.", &logging_console_bool, [] {
+        sub->AddBoolOption("Console", "Log Output To An External Console.", &logging_console_bool, [] {
             Logging_ConsoleFunction();
             });
-
-
+            */
 
         });
 }

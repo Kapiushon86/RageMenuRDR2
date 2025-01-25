@@ -8,7 +8,7 @@ const int submenuPriority = 8;
 
 void CModifiersSubmenu::Init() {
 
-    g_Menu->AddSubmenu("RageMenu", "Modifiers", Submenu_modifiers, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > Player > Modifiers", Submenu_modifiers, submenuPriority, [](Submenu* sub) {
 
         sub->AddBoolOption("Infinite Stamina", "", &modifiers_infinite_stamina_bool, [=] {
             Modifiers_InfiniteStaminaFunction();

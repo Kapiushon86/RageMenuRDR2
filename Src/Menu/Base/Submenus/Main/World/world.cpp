@@ -18,8 +18,7 @@ void CWorldSubmenu::Init() {
     g_WeatherSubmenu->Init();
 
 
-
-    g_Menu->AddSubmenu("RageMenu", "World", Submenu_world, submenuPriority, [](Submenu* sub) {
+    g_Menu->AddSubmenu("RageMenu", "Main > World", Submenu_world, submenuPriority, [](Submenu* sub) {
 
         sub->AddSubmenuOption("Time", "", Submenu_time); 
 
