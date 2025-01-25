@@ -3,7 +3,7 @@
 #include <thread>
 
 bool noclip_no_clip_bool = false;
-bool noclip_use_yaw_rotation_bool = false;
+bool noclip_use_yaw_rotation_bool = true;
 bool noclip_freeze_entity_bool = true;
 
 std::vector<std::string> noclipSpeed = {

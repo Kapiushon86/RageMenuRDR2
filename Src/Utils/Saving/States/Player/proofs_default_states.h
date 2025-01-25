@@ -1,0 +1,6 @@
+#ifndef PROOFS_DEFAULT_STATES_H
+#define PROOFS_DEFAULT_STATES_H
+
+
+
+#endif

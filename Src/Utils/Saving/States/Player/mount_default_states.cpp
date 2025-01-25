@@ -4,6 +4,7 @@
 bool mount_apply_to_owned_mount = false;
 bool mount_invincibility_bool = false;
 bool mount_invisibility_bool = false;
+bool mount_levitate_bool = false;
 bool mount_infinite_stamina_bool = false;
 bool mount_was_infinite_stamina_bool = false;
 bool mount_no_ragdoll_bool = false;

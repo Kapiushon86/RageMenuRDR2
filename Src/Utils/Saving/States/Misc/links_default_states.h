@@ -1,0 +1,4 @@
+#ifndef LINKS_DEFAULT_STATES_H
+#define LINKS_DEFAULT_STATES_H
+
+#endif

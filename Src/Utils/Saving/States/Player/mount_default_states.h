@@ -9,6 +9,7 @@
 extern bool mount_apply_to_owned_mount;
 extern bool mount_invincibility_bool;
 extern bool mount_invisibility_bool;
+extern bool mount_levitate_bool;
 extern bool mount_infinite_stamina_bool;
 extern bool mount_was_infinite_stamina_bool;
 extern bool mount_no_ragdoll_bool;

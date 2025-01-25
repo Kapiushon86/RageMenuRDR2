@@ -5,7 +5,7 @@
 #include <string>
 
 bool freecamera_free_camera_bool = false;
-bool freecamera_use_yaw_rotation_bool = false;
+bool freecamera_use_yaw_rotation_bool = true;
 bool freecamera_freeze_entity_bool = true;
 bool freecamera_entity_invisibility_bool = false;
 
