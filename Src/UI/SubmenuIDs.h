@@ -11,6 +11,7 @@ enum eSubmenuID : int
     Submenu_mount,
     Submenu_vehicle,
     Submenu_modifiers,
+    Submenu_proofs,
     Submenu_model,
     Submenu_model_changer,
     Submenu_effects,
@@ -33,14 +34,18 @@ enum eSubmenuID : int
 
     // Teleport
     Submenu_teleport,
+    Submenu_locations,
 
     // Spawner
     Submenu_spawner,
     Submenu_peds,
     Submenu_humans,
+    Submenu_humans_males,
+    Submenu_humans_females,
     Submenu_horses,
     Submenu_animals,
     Submenu_legendary_animals,
+    Submenu_dogs,
     Submenu_vehicles,
 
     // World
@@ -54,6 +59,7 @@ enum eSubmenuID : int
     Submenu_wav_player,
     Submenu_disables,
     Submenu_bypasses,
+    Submenu_links,
 
     // Settings
     Submenu_settings,
@@ -66,10 +72,4 @@ enum eSubmenuID : int
     Submenu_ragemenu,
     Submenu_developers,
     Submenu_userinterface,
-
-    // Other
-
-    // Example
-    Submenu_example,
-    Submenu_examplesub
 };

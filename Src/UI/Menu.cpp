@@ -3,7 +3,7 @@
 #include "Menu.hpp"
 #include "Drawing.h"
 #include "../common.hpp"
-#include "../Utils/Config/settings_manager.h"
+#include "../Utils/Config/settings_manger.h"
 #include <algorithm>
 #include <chrono>
 #include <thread>
@@ -60,7 +60,7 @@ void CNativeMenu::Update()
 			}
 		}
 
-		if (disables_disable_radar_when_menu_open_bool) {
+		if (disables_disable_radar_when_menu_is_open_bool) {
 			MAP::DISPLAY_RADAR(false); 
 		}
 		else {
@@ -72,15 +72,11 @@ void CNativeMenu::Update()
 		m_CurrentSubmenuID = m_CurrentSubmenu->ID;
 	}
 
-	// Uncomment if needed for other prompts
 	// HUD::_UI_PROMPT_SET_VISIBLE(m_SelectPrompt, m_IsOpen);
 	// HUD::_UI_PROMPT_SET_ENABLED(m_SelectPrompt, m_IsOpen);
 	// HUD::_UI_PROMPT_SET_VISIBLE(m_BackPrompt, m_IsOpen);
 	// HUD::_UI_PROMPT_SET_ENABLED(m_BackPrompt, m_IsOpen);
 }
-
-
-
 
 void CNativeMenu::SetEnabled(bool bEnabled, bool bPlaySounds)
 {
@@ -103,7 +99,6 @@ void CNativeMenu::SetEnabled(bool bEnabled, bool bPlaySounds)
 	}
 }
 
-
 void CNativeMenu::CheckInput()
 {
 	m_ControlIndex = PAD::IS_USING_KEYBOARD_AND_MOUSE(0) ? 0 : 2;
@@ -116,9 +111,10 @@ void CNativeMenu::CheckInput()
 	std::cout << "Loaded Numpad Open Key: " << numpadOpenKey << std::endl;
 	std::cout << "Loaded Controller Open Key: " << controllerOpenKey << std::endl;
 
-	int openKeyCode = GetVirtualKeyFromString(openKey);
-	int numpadOpenKeyCode = GetVirtualKeyFromString(numpadOpenKey);
-	int controllerComboCode = GetVirtualKeyFromString(controllerOpenKey);
+	int openKeyCode = SettingsManager::GetVirtualKeyFromString(openKey);
+	int numpadOpenKeyCode = SettingsManager::GetVirtualKeyFromString(numpadOpenKey);
+	int controllerComboCode = SettingsManager::GetVirtualKeyFromString(controllerOpenKey);
+
 
 	m_OpenKeyPressed =
 		(openKeyCode > 0 && IsKeyJustUp(openKeyCode)) ||
@@ -145,9 +141,7 @@ void CNativeMenu::CheckInput()
 		PAD::IS_DISABLED_CONTROL_JUST_PRESSED(m_ControlIndex, INPUT_GAME_MENU_RIGHT);
 }
 
-
-int CNativeMenu::GetVirtualKeyFromString(const std::string& key)
-{
+int SettingsManager::GetVirtualKeyFromString(const std::string& key) {
 	std::string lowerKey = key;
 	std::transform(lowerKey.begin(), lowerKey.end(), lowerKey.begin(), ::tolower);
 
@@ -179,15 +173,16 @@ int CNativeMenu::GetVirtualKeyFromString(const std::string& key)
 	if (lowerKey == ".") return VK_DECIMAL;
 
 	// Handle PlayStation Controller keys:
-	if (lowerKey == "r2+x") return INPUT_FRONTEND_X;
 	if (lowerKey == "r2+square") return INPUT_FRONTEND_X;
+	if (lowerKey == "r2+x") return INPUT_FRONTEND_ACCEPT;
 
 	// Handle Xbox Controller keys:
-	if (lowerKey == "rb+a") return INPUT_GAME_MENU_ACCEPT;
-	if (lowerKey == "rb+x") return INPUT_GAME_MENU_ACCEPT;
+	if (lowerKey == "rb+x") return INPUT_FRONTEND_X;
+	if (lowerKey == "rb+a") return INPUT_FRONTEND_ACCEPT;
 
 	return 0; 
 }
+
 
 void CNativeMenu::HandleEnterPressed()
 {
@@ -203,7 +198,7 @@ void CNativeMenu::HandleEnterPressed()
 	else if (option->IsBoolOption) {
 		BoolOption* boolOption = option->As<BoolOption*>();
 		if (boolOption->pBoolPointer != nullptr) {
-			*boolOption->pBoolPointer ^= TRUE; 
+			*boolOption->pBoolPointer ^= TRUE;
 		}
 		else {
 			std::cerr << "Invalid boolean pointer for option index " << m_SelectionIndex << std::endl;
@@ -254,14 +249,21 @@ void CNativeMenu::HandleBackPressed()
 void CNativeMenu::HandleUpKeyPressed()
 {
 	if (GetSelectedOption() == nullptr) return;
-
 	int numOptions = m_CurrentSubmenu->GetNumberOfOptions();
-	m_SelectionIndex = (m_SelectionIndex - 1 + numOptions) % numOptions;
 
-	// Skip over empty option
-	while (GetSelectedOption()->IsEmptyOption) {
-		m_SelectionIndex = (m_SelectionIndex - 1 + numOptions) % numOptions;
+	if (IsKeyDownLong('X')) { 
+		m_SelectionIndex -= 10;
+		if (m_SelectionIndex < 0) {
+			m_SelectionIndex = 0;
+		}
 	}
+	else {
+		m_SelectionIndex--;
+	}
+
+	if (m_SelectionIndex < 0) { m_SelectionIndex = numOptions - 1; }
+	if (GetSelectedOption()->IsEmptyOption) { m_SelectionIndex--; }
+	if (m_SelectionIndex < 0) { m_SelectionIndex = numOptions - 1; }
 
 	playSoundFrontend("NAV_UP", "Ledger_Sounds");
 }
@@ -269,17 +271,26 @@ void CNativeMenu::HandleUpKeyPressed()
 void CNativeMenu::HandleDownKeyPressed()
 {
 	if (GetSelectedOption() == nullptr) return;
-
 	int numOptions = m_CurrentSubmenu->GetNumberOfOptions();
-	m_SelectionIndex = (m_SelectionIndex + 1) % numOptions;
 
-	// Skip over empty option
-	while (GetSelectedOption()->IsEmptyOption) {
-		m_SelectionIndex = (m_SelectionIndex + 1) % numOptions;
+	if (IsKeyDownLong('X')) {
+		m_SelectionIndex += 10;
+		if (m_SelectionIndex > numOptions - 1) {
+			m_SelectionIndex = numOptions - 1;
+		}
 	}
+	else {
+		m_SelectionIndex++;
+	}
+
+	if (m_SelectionIndex > numOptions - 1) { m_SelectionIndex = 0; }
+	if (GetSelectedOption()->IsEmptyOption) { m_SelectionIndex++; }
+	if (m_SelectionIndex > numOptions - 1) { m_SelectionIndex = 0; }
 
 	playSoundFrontend("NAV_DOWN", "Ledger_Sounds");
 }
+
+
 
 void CNativeMenu::HandleLeftKeyPressed()
 {
@@ -344,7 +355,7 @@ void CNativeMenu::HandleInput()
 void CNativeMenu::DisableCommonInputs()
 {
 	if (m_IsOpen) {
-		if (disables_disable_horse_whistling_bool && m_ControlIndex == INPUT_GROUP_GAMEPAD) {
+		if (disables_disable_horse_whistle_on_controller_bool && m_ControlIndex == INPUT_GROUP_GAMEPAD) {
 			*getGlobalPtr(1900383 + 316) = 2; // Disables horse whistling this frame, seems to be safe and stable?
 			PAD::DISABLE_CONTROL_ACTION(INPUT_GROUP_GAMEPAD, INPUT_WHISTLE, false);
 			PAD::DISABLE_CONTROL_ACTION(INPUT_GROUP_GAMEPAD, INPUT_WHISTLE_HORSEBACK, false);

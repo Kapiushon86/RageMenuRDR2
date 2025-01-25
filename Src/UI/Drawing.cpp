@@ -29,11 +29,10 @@ struct uiFontSizes {
 	static constexpr int EmptyOption = 22;
 };
 
-// Background Constants
 struct uiBackground {
-	static constexpr float PositionX = 25.0f; //1850.0f for right side
+	static constexpr float PositionX = 25.0f; // 1850.0f for right side, 25.0 for left
 	static constexpr float PositionY = 25.0f;
-	static constexpr float Width = 575.0f;
+	static constexpr float Width = 650.0f;
 	static constexpr float Height = 1025.0f;
 	static constexpr float MiddleX = PositionX + HALF(Width); // The center X position for the background
 	static constexpr float MiddleY = PositionY + HALF(Height); // The center Y position for the background
@@ -41,11 +40,10 @@ struct uiBackground {
 
 // Header Constants
 struct uiHeader {
-	static constexpr float Width = 445.0f;
+	static constexpr float Width = 520.0f;
 	static constexpr float Height = 110.0f;
 	static constexpr float PositionX = uiBackground::MiddleX - HALF(Width);
 	static constexpr float PositionY = uiBackground::PositionY + ((uiBackground::Width - Width) * 0.2f);
-	// What the fuck is this calculation
 	static constexpr float TextPositionY = ((PositionY + HALF(Height)) - HALF(uiFontSizes::Header)) - (HALF(uiFontSizes::Header) * 0.1f);
 
 	static constexpr float SubHeaderTextPositionY = (PositionY + Height) + HALF(uiFontSizes::SubHeader);
@@ -54,10 +52,10 @@ struct uiHeader {
 // Footer Constants
 struct uiFooter {
 	static constexpr float Width = uiHeader::Width;
-	static constexpr float Height = 2.0f;
+	static constexpr float Height = 4.0f;
 	static constexpr float PositionX = uiBackground::MiddleX;
-	static constexpr float PositionY = HALF(uiBackground::PositionY) + (uiBackground::Height - HALF(uiBackground::Width - Width)) - HALF(Height);
-	static constexpr float TextPositionY = (PositionY + Height) + HALF(uiFontSizes::Footer) - 5.0f;
+	static constexpr float PositionY = uiBackground::PositionY + uiBackground::Height - HALF(uiBackground::Width - Width) - HALF(Height);
+	static constexpr float TextPositionY = (PositionY + Height) + HALF(uiFontSizes::Footer) - 42.0f; // Tooltip pos
 };
 
 // Scroller Constants
@@ -77,11 +75,11 @@ struct uiOption {
 	static constexpr float Height = 50.0f;
 	static constexpr float PositionX = uiBackground::MiddleX;
 	static constexpr float TextOffset = 8.0f;
-	static constexpr float LeftTextPositionX = (PositionX - HALF(Width)) + TextOffset; // X Position of text
-	static constexpr float RightTextPositionX = (PositionX + HALF(Width)) - TextOffset; // X Position of Vector text
+	static constexpr float LeftTextPositionX = (PositionX - HALF(Width)) + TextOffset;
+	static constexpr float RightTextPositionX = (PositionX + HALF(Width)) - TextOffset;
 
-	static constexpr float PositionYStart = 269.0f; // Position at which the first option will be drawn at
-	static constexpr int TextPositionYStart = 275; // Position at which the text of the first option will be drawn at
+	static constexpr float PositionYStart = 269.0f;
+	static constexpr int TextPositionYStart = 275;
 
 	static constexpr float EmptyOpionTextPositionX = uiBackground::MiddleX;
 	static constexpr float OptionCounterPositionX = PositionX + HALF(Width);
@@ -89,8 +87,8 @@ struct uiOption {
 
 // Selection Box Constants
 struct uiSelectionBox {
-	static constexpr float OffsetUD = 8.0f; // Up/Down Offset
-	static constexpr float OffsetLR = 3.0f; // Left/Right Offset
+	static constexpr float OffsetUD = 8.0f;
+	static constexpr float OffsetLR = 3.0f;
 
 	static constexpr float TopWidth = uiOption::Width + OffsetUD;
 	static constexpr float TopPositionX = uiOption::PositionX;
@@ -115,7 +113,7 @@ struct uiCheckbox {
 };
 
 const float INCREMENT = (SCREEN_HEIGHT * 0.050f); // Y Position increment for option and sprite positions
-#pragma endregion
+
 
 
 const std::vector<const char*> FontList = { "body", "body1", "catalog1", "catalog2", "catalog3", "catalog4", "catalog5", "chalk",
@@ -282,7 +280,6 @@ void drawVectorOptionInternal(Option* pOption, bool drawInRange, bool drawOutOfR
 	}
 }
 
-
 void drawBoolOptionInternal(Option* pOption, bool drawInRange, bool drawOutOfRange, float inRangeIncr, float outOfRangeIncr)
 {
 	BoolOption* option = pOption->As<BoolOption*>();
@@ -306,7 +303,6 @@ void drawBoolOptionInternal(Option* pOption, bool drawInRange, bool drawOutOfRan
 		Drawing::DrawSprite("generic_textures", "tick_box", uiCheckbox::PositionX, uiOption::PositionYStart + outOfRangeIncr, uiCheckbox::Width, uiCheckbox::Height, 0, COLOR_MAIN_PURPLE, true);
 	}
 }
-
 
 void Drawing::DrawFormattedText(const std::string& text, Font font, int red, int green, int blue, int alpha, Alignment align, int textSize, float posX, float posY, int wrapWidth, int letterSpacing)
 {
