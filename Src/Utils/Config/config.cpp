@@ -106,8 +106,22 @@ bool Config::CleanupUnwantedFolders() {
     return true;
 }
 
-bool Config::CreateIniFile() {
+bool Config::CreateOptionsIniFile() {
     std::string iniFilePath = GetConfigsFolderPath() + "\\" + INI_OPTIONS_FILE;
+    if (fs::exists(iniFilePath)) {
+        return true;
+    }
+
+    std::ofstream iniFile(iniFilePath, std::ios::out | std::ios::trunc);
+    if (!iniFile.is_open()) {
+        return false;
+    }
+    iniFile.close();
+    return true;
+}
+
+bool Config::CreateSettingsIniFile() {
+    std::string iniFilePath = GetConfigsFolderPath() + "\\" + INI_SETTINGS_FILE;
     if (fs::exists(iniFilePath)) {
         return true;
     }
