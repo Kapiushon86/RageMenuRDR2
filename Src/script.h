@@ -9,3 +9,6 @@
 void InitializeMenu();
 void ScriptMain();
 void UpdateFeaturesLoop();
+void InitializeMaleHumansList();
+void InitializeFemaleHumansList();
+void InitializeAnimalsList();
