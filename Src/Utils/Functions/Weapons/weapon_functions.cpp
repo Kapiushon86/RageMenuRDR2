@@ -1,6 +1,8 @@
 #include "weapon_functions.h"
 #include "../../../Menu/Base/Submenus/Main/Weapons/weapons.h" 
 #include "../../Saving/States/Weapons/weapons_default_states.h" 
+#include <vector>
+
 
 std::vector<std::string> WeaponsList = {
     // ------------ Pistols ------------
@@ -119,17 +121,6 @@ std::vector<std::string> AmmoList = {
     "AMMO_MOLOTOV_VOLATILE",       // Volatile Molotov
 };
 
-void Weapon_LockAllFunction() {
-    for (size_t i = 0; i < WeaponsList.size(); ++i) {
-        std::string weapon = WeaponsList[i];
-        Hash weaponHash = MISC::GET_HASH_KEY(weapon.c_str());
-
-        UNLOCK::UNLOCK_SET_UNLOCKED(weaponHash, FALSE);
-
-        UNLOCK::UNLOCK_SET_VISIBLE(weaponHash, FALSE);
-    }
-}
-
 void Weapon_UnlockAllFunction() {
     Ped playerPed = PLAYER::PLAYER_PED_ID();
 
@@ -143,6 +134,17 @@ void Weapon_UnlockAllFunction() {
                 UNLOCK::UNLOCK_SET_VISIBLE(weaponHash, true);
             }
         }
+    }
+}
+
+void Weapon_LockAllFunction() {
+    for (size_t i = 0; i < WeaponsList.size(); ++i) {
+        std::string weapon = WeaponsList[i];
+        Hash weaponHash = MISC::GET_HASH_KEY(weapon.c_str());
+
+        UNLOCK::UNLOCK_SET_UNLOCKED(weaponHash, FALSE);
+
+        UNLOCK::UNLOCK_SET_VISIBLE(weaponHash, FALSE);
     }
 }
 
@@ -188,26 +190,16 @@ void Weapon_InfiniteAmmoFunction() {
     Ped playerPed = PLAYER::PLAYER_PED_ID();
 
     if (ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(playerPed)) {
-        Hash currentWeaponHash;
-        if (WEAPON::GET_CURRENT_PED_WEAPON(playerPed, &currentWeaponHash, true, 0, false)) {
-            if (weapon_infinite_ammo_bool) {
-                Hash ammoType = WEAPON::_GET_AMMO_TYPE_FOR_WEAPON(currentWeaponHash);
+        const int MAX_AMMO = 9999;
 
-                if (ammoType != 0) {
-                    PLAYER::_SET_PLAYER_MAX_AMMO_OVERRIDE_FOR_AMMO_TYPE(PLAYER::PLAYER_ID(), ammoType, INT_MAX);
+        if (weapon_infinite_ammo_bool)
+        for (size_t i = 0; i < AmmoList.size(); ++i) {
+            std::string ammoType = AmmoList[i];
+            Hash ammoHash = MISC::GET_HASH_KEY(ammoType.c_str());
 
-                    WEAPON::SET_PED_AMMO_BY_TYPE(playerPed, ammoType, INT_MAX);
-
-                    WEAPON::SET_PED_INFINITE_AMMO(playerPed, true, currentWeaponHash);
-                }
-            }
-            else {
-                WEAPON::SET_PED_INFINITE_AMMO(playerPed, false, currentWeaponHash);
-
-                Hash ammoType = WEAPON::_GET_AMMO_TYPE_FOR_WEAPON(currentWeaponHash);
-                if (ammoType != 0) {
-                    PLAYER::_SET_PLAYER_MAX_AMMO_OVERRIDE_FOR_AMMO_TYPE(PLAYER::PLAYER_ID(), ammoType, 0);
-                }
+            int currentAmmo = WEAPON::GET_PED_AMMO_BY_TYPE(playerPed, ammoHash);
+            if (currentAmmo < MAX_AMMO) {
+                WEAPON::_ADD_AMMO_TO_PED_BY_TYPE(playerPed, ammoHash, MAX_AMMO - currentAmmo, 0xC0A3098D);
             }
         }
     }
@@ -222,6 +214,57 @@ void Weapon_InfiniteClipFunction() {
         }
         else {
             WEAPON::_SET_PED_INFINITE_AMMO_CLIP(playerPed, false);
+        }
+    }
+}
+
+Vector3 addVector(const Vector3& vec1, const Vector3& vec2) {
+    return { vec1.x + vec2.x, vec1.y + vec2.y, vec1.z + vec2.z };
+}
+
+Vector3 multiplyVector(const Vector3& vec, float scalar) {
+    return { vec.x * scalar, vec.y * scalar, vec.z * scalar };
+}
+
+Vector3 RotationToDirection(const Vector3& rotation) {
+    float radiansZ = rotation.z * 0.0174532924f;
+    float radiansX = rotation.x * 0.0174532924f;
+
+    float cosX = cos(radiansX);
+    float sinX = sin(radiansX);
+    float cosZ = cos(radiansZ);
+    float sinZ = sin(radiansZ);
+
+    return { -sinZ * cosX, cosZ * cosX, sinX };
+}
+
+void Weapon_RapidFireFunction() {
+    Ped playerPed = PLAYER::PLAYER_PED_ID();
+
+    if (ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(playerPed)) {
+        if (weapon_rapid_fire_bool) {
+            if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, 1)) {
+
+                Vector3 gameplayCam = CAM::GET_GAMEPLAY_CAM_COORD();
+                Vector3 gameplayCamRot = CAM::GET_GAMEPLAY_CAM_ROT(0);
+                Vector3 gameplayCamDirection = RotationToDirection(gameplayCamRot);
+
+                Vector3 startCoords = addVector(gameplayCam, multiplyVector(gameplayCamDirection, 1.0f));
+                Vector3 endCoords = addVector(startCoords, multiplyVector(gameplayCamDirection, 500.0f));
+
+                Hash weaponHash;
+                WEAPON::GET_CURRENT_PED_WEAPON(playerPed, &weaponHash, true, 0, false);
+
+                if (PAD::IS_CONTROL_PRESSED(2, 208) || (GetKeyState(VK_LBUTTON) & 0x8000)) {
+                    MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(
+                        startCoords.x, startCoords.y, startCoords.z,
+                        endCoords.x, endCoords.y, endCoords.z,
+                        50, 1, weaponHash, playerPed, 1, 1, 0xbf800000, NULL
+                    );
+                }
+            }
+        }
+        else {
         }
     }
 }
@@ -271,6 +314,36 @@ void Weapon_NoSpreadFunction() {
     }
 }
 
+void Weapon_NoWeaponWheelSlowDownFunction() {
+    if (weapon_no_weapon_wheel_slow_down_bool) {
+        HUD::_DISABLE_REDUCED_MENU_TIME_SCALE();
+    }
+    else {
+    HUD::_ENABLE_REDUCED_MENU_TIME_SCALE();
+    }
+}
+
+void Weapon_AlwaysKillCamFunction() {
+    if (weapon_always_kill_cam_bool) {
+        int playerId = PLAYER::PLAYER_ID();
+        Ped playerPed = PLAYER::GET_PLAYER_PED(playerId);
+
+        const int recentlyMs = 5000;
+        std::vector<Ped> attackedPeds;
+
+        for (size_t i = 0; i < attackedPeds.size(); ++i) {
+            Ped ped = attackedPeds[i];
+            if (ENTITY::IS_ENTITY_DEAD(ped)) {
+                Entity killer = PED::GET_PED_SOURCE_OF_DEATH(ped);
+
+                if (killer == playerPed) {
+                    CAM::_FORCE_CINEMATIC_DEATH_CAM_ON_PED(ped);
+                }
+            }
+        }
+    }
+}
+
 void Weapon_BleedOutFunction() {
    
 }
@@ -301,8 +374,4 @@ void Weapon_CleanFunction() {
             WEAPON::_SET_WEAPON_DEGRADATION(weaponObject, 0.0f);
         }
     }
-}
-
-void Weapon_AlwaysKillCamFunction() {
-    
 }

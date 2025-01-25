@@ -70,7 +70,6 @@ void Time_SyncWithSystemFunction() {
     }
 }
 
-
 void Time_RandomTimeFunction() {
     if (!time_freeze_time_bool) {
         size_t newIndex;
