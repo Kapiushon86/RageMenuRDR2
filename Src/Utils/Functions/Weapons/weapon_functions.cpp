@@ -349,6 +349,9 @@ void Weapon_BleedOutFunction() {
 }
 
 void Weapon_ReviveFunction() {
+    if (weapon_revive_bool) {
+
+    }
  
 }
 

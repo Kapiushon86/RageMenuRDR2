@@ -7,23 +7,39 @@
 #include <iostream>
 
 std::vector<std::tuple<std::string, int, int, int>> TimePresets = {
-    {"Sunrise", 6, 0, 0},        // 6:00 AM
-    {"Morning", 7, 30, 0},       // 7:30 AM
-    {"Late Morning", 9, 0, 0},   // 9:00 AM
-    {"Noon", 12, 0, 0},          // 12:00 PM
-    {"Afternoon", 13, 30, 0},    // 1:30 PM
-    {"Late Afternoon", 15, 30, 0}, // 3:30 PM
-    {"Evening", 17, 30, 0},      // 5:30 PM
-    {"Twilight", 19, 0, 0},      // 7:00 PM
-    {"Sunset", 20, 30, 0},       // 8:30 PM
-    {"Dusk", 21, 0, 0},          // 9:00 PM
-    {"Night", 22, 0, 0},         // 10:00 PM
-    {"Late Night", 23, 30, 0},   // 11:30 PM
-    {"Midnight", 0, 0, 0},       // 12:00 AM
-    {"Early Morning", 3, 30, 0}, // 3:30 AM
-    {"Dawn", 5, 0, 0}            // 5:00 AM
+    {"Early Morning", 5, 0, 0},          // 5:00 AM
+    {"Early Morning + 30", 5, 30, 0},    // 5:30 AM
+    {"Sunrise", 6, 0, 0},                // 6:00 AM
+    {"Sunrise + 30", 6, 30, 0},          // 6:30 AM
+    {"Morning", 7, 0, 0},                // 7:00 AM
+    {"Morning + 30", 7, 30, 0},          // 7:30 AM
+    {"Late Morning", 8, 0, 0},           // 8:00 AM
+    {"Late Morning + 30", 8, 30, 0},     // 8:30 AM
+    {"Noon", 12, 0, 0},                  // 12:00 PM
+    {"Noon + 30", 12, 30, 0},            // 12:30 PM
+    {"Afternoon", 13, 0, 0},             // 1:00 PM
+    {"Afternoon + 30", 13, 30, 0},       // 1:30 PM
+    {"Late Afternoon", 14, 0, 0},        // 2:00 PM
+    {"Late Afternoon + 30", 14, 30, 0},  // 2:30 PM
+    {"Evening", 17, 0, 0},               // 5:00 PM
+    {"Evening + 30", 17, 30, 0},         // 5:30 PM
+    {"Twilight", 18, 0, 0},              // 6:00 PM
+    {"Twilight + 30", 18, 30, 0},        // 6:30 PM
+    {"Sunset", 19, 0, 0},                // 7:00 PM
+    {"Sunset + 30", 19, 30, 0},          // 7:30 PM
+    {"Dusk", 20, 0, 0},                  // 8:00 PM
+    {"Dusk + 30", 20, 30, 0},            // 8:30 PM
+    {"Night", 21, 0, 0},                 // 9:00 PM
+    {"Night + 30", 21, 30, 0},           // 9:30 PM
+    {"Late Night", 22, 0, 0},            // 10:00 PM
+    {"Late Night + 30", 22, 30, 0},      // 10:30 PM
+    {"Midnight", 0, 0, 0},               // 12:00 AM
+    {"Midnight + 30", 0, 30, 0},         // 12:30 AM
+    {"Early Morning", 3, 0, 0},          // 3:00 AM
+    {"Early Morning + 30", 3, 30, 0},    // 3:30 AM
+    {"Early Morning + 60", 4, 0, 0},     // 4:00 AM
+    {"Early Morning + 90", 4, 30, 0}     // 4:30 AM
 };
-
 
 // Static variables for state tracking
 static int frozenHour = -1, frozenMinute = -1, frozenSecond = -1;
@@ -69,6 +85,13 @@ void Time_SyncWithSystemFunction() {
         CLOCK::SET_CLOCK_TIME(localTime.tm_hour, localTime.tm_min, localTime.tm_sec);
     }
 }
+
+void Time_SmoothTransitionFunction() {
+    if (time_smooth_transition_bool) {
+
+    }
+}
+
 
 void Time_RandomTimeFunction() {
     if (!time_freeze_time_bool) {

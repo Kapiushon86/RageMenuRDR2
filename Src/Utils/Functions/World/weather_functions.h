@@ -10,6 +10,7 @@ using Hash = uint32_t;
 void Weather_FreezeWeatherFunction();
 void Weather_LoopWeatherFunction();
 void Weather_GroundSnowFunction();
+void Weather_SmoothTransitionFunction();
 void Weather_RandomWeatherFunction();
 
 extern std::vector<std::tuple<std::string, Hash>> WeatherPresets;

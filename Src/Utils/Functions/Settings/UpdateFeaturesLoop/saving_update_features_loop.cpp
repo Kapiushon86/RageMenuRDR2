@@ -4,4 +4,5 @@
 void SavingUpdateFeaturesLoop() {
 
 	Saving_AutoSaveFunction();
+	Saving_ResetOptionsToDefaultFunction();
 }

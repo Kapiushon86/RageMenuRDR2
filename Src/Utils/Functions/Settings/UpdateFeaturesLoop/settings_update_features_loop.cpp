@@ -2,6 +2,7 @@
 #include "../settings_functions.h"   
 
 void SettingsUpdateFeaturesLoop() {
-	Settings_ShowBreadcrumbsFunction();
+	void Settings_LeftPositionFunction();
+	void Settings_ShowBreadCrumbsFunction();
 
 }

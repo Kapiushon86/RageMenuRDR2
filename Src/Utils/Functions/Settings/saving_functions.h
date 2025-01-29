@@ -4,8 +4,7 @@
 void Saving_AutoSaveFunction();
 void Saving_ControllerSupportFunction();
 void Saving_NumpadSupportFunction();
-
 void Saving_ManualSaveFunction();
-void Saving_ResetSelectedOptionFunction();
+void Saving_ResetOptionsToDefaultFunction();
 
 #endif 

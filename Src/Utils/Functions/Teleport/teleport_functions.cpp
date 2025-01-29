@@ -20,61 +20,100 @@ void Teleport_AutoWaypointFunction() {
 
     Ped playerPed = PLAYER::PLAYER_PED_ID();
     Ped mount = PED::GET_MOUNT(playerPed);
+    Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-    if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-        PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-        PED::SET_PED_CAN_RAGDOLL(mount, false);
+    if (teleport_show_screen_fades_bool) {
+        CAM::DO_SCREEN_FADE_OUT(450);
+        WAIT(400);
     }
 
-    const float groundCheckHeights[] = {
+    const float PlayerGroundCheckHeights[] = {
         100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0,
         450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0
     };
 
-    bool groundFound = false;
-    bool mountGroundFound = false;
+    const float MountGroundCheckHeights[] = {
+        100.0, 80.0, 60.0, 40.0, 20.0, 0.0, 120.0, 180.0, 240.0,
+        300.0, 360.0, 420.0, 480.0, 540.0, 600.0
+    };
 
-    for (float height : groundCheckHeights) {
-        ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, waypointCoords.x, waypointCoords.y, height, true, true, true);
-        WAIT(100);
+    const float VehicleGroundCheckHeights[] = {
+        100.0, 90.0, 70.0, 50.0, 30.0, 10.0, 0.0, 120.0, 180.0, 240.0,
+        300.0, 360.0, 420.0, 480.0, 540.0
+    };
 
-        if (MISC::GET_GROUND_Z_FOR_3D_COORD(waypointCoords.x, waypointCoords.y, height, &waypointCoords.z, false)) {
-            waypointCoords.z += 3.0f;
-            groundFound = true;
-            break;
+    bool PlayerGroundFound = false;
+    bool MountGroundFound = false;
+    bool VehicleGroundFound = false;
+
+    // Player Teleport
+    if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && !PED::IS_PED_ON_MOUNT(playerPed)) {
+        for (float height : PlayerGroundCheckHeights) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, waypointCoords.x, waypointCoords.y, height, true, true, true);
+            WAIT(100);
+
+            if (MISC::GET_GROUND_Z_FOR_3D_COORD(waypointCoords.x, waypointCoords.y, height, &waypointCoords.z, false)) {
+                waypointCoords.z += 3.0f;
+                PlayerGroundFound = true;
+                break;
+            }
         }
     }
 
-    if (!groundFound) {
+    // Mount Teleport
+    if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
+        for (float height : MountGroundCheckHeights) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, waypointCoords.x, waypointCoords.y, height, true, true, true);
+            WAIT(100);
+
+            if (MISC::GET_GROUND_Z_FOR_3D_COORD(waypointCoords.x, waypointCoords.y, height, &waypointCoords.z, false)) {
+                waypointCoords.z += 3.0f;
+                MountGroundFound = true;
+                break;
+            }
+        }
+    }
+
+    // Vehicle Teleport
+    if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && ENTITY::DOES_ENTITY_EXIST(vehicle) && !ENTITY::IS_ENTITY_DEAD(vehicle)) {
+        for (float height : VehicleGroundCheckHeights) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, waypointCoords.x, waypointCoords.y, height, true, true, true);
+            WAIT(100);
+
+            if (MISC::GET_GROUND_Z_FOR_3D_COORD(waypointCoords.x, waypointCoords.y, height, &waypointCoords.z, false)) {
+                waypointCoords.z += 3.0f;
+                VehicleGroundFound = true;
+                break;
+            }
+        }
+    }
+
+    if (!PlayerGroundFound && !MountGroundFound && !VehicleGroundFound) {
+        if (teleport_show_screen_fades_bool) {
+            CAM::DO_SCREEN_FADE_IN(250);
+        }
         UIUtil::PrintSubtitle("Teleport Failed: Unable to Find Ground.");
         return;
     }
 
-    if (teleport_show_screen_fades_bool) {
-        CAM::DO_SCREEN_FADE_OUT(200);
-        WAIT(200);
-    }
-
-    if (PED::IS_PED_ON_MOUNT(playerPed)) {
+    if (PlayerGroundFound) {
         ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, waypointCoords.x, waypointCoords.y, waypointCoords.z, true, true, true);
         ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
+    }
 
+    if (MountGroundFound) {
         ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, waypointCoords.x, waypointCoords.y, waypointCoords.z, true, true, true);
         ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(mount, false);
     }
-    else {
-        ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, waypointCoords.x, waypointCoords.y, waypointCoords.z, true, true, true);
-        ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
-    }
 
-    if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-        PED::SET_PED_CAN_RAGDOLL(playerPed, true);
-        PED::SET_PED_CAN_RAGDOLL(mount, true);
+    if (VehicleGroundFound) {
+        ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, waypointCoords.x, waypointCoords.y, waypointCoords.z, true, true, true);
+        ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(vehicle, false);
     }
 
     if (teleport_show_screen_fades_bool) {
-        CAM::DO_SCREEN_FADE_IN(250);
-        WAIT(250);
+        CAM::DO_SCREEN_FADE_IN(450);
+        WAIT(400);
     }
 }
 
@@ -92,63 +131,103 @@ void Teleport_WaypointFunction() {
 
     Ped playerPed = PLAYER::PLAYER_PED_ID();
     Ped mount = PED::GET_MOUNT(playerPed);
+    Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
-    if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-        PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-        PED::SET_PED_CAN_RAGDOLL(mount, false);
+    if (teleport_show_screen_fades_bool) {
+        CAM::DO_SCREEN_FADE_OUT(450);
+        WAIT(400);
     }
 
-    const float groundCheckHeights[] = {
+    const float PlayerGroundCheckHeights[] = {
         100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0,
         450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0
     };
 
-    bool groundFound = false;
-    bool mountGroundFound = false;
+    const float MountGroundCheckHeights[] = {
+        100.0, 80.0, 60.0, 40.0, 20.0, 0.0, 120.0, 180.0, 240.0,
+        300.0, 360.0, 420.0, 480.0, 540.0, 600.0
+    };
 
-    for (float height : groundCheckHeights) {
-        ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, waypointCoords.x, waypointCoords.y, height, true, true, true);
-        WAIT(100);
+    const float VehicleGroundCheckHeights[] = {
+        100.0, 90.0, 70.0, 50.0, 30.0, 10.0, 0.0, 120.0, 180.0, 240.0,
+        300.0, 360.0, 420.0, 480.0, 540.0
+    };
 
-        if (MISC::GET_GROUND_Z_FOR_3D_COORD(waypointCoords.x, waypointCoords.y, height, &waypointCoords.z, false)) {
-            waypointCoords.z += 3.0f;
-            groundFound = true;
-            break;
+    bool PlayerGroundFound = false;
+    bool MountGroundFound = false;
+    bool VehicleGroundFound = false;
+
+    // Player Teleport
+    if (!PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && !PED::IS_PED_ON_MOUNT(playerPed)) {
+        for (float height : PlayerGroundCheckHeights) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, waypointCoords.x, waypointCoords.y, height, true, true, true);
+            WAIT(100);
+
+            if (MISC::GET_GROUND_Z_FOR_3D_COORD(waypointCoords.x, waypointCoords.y, height, &waypointCoords.z, false)) {
+                waypointCoords.z += 3.0f;
+                PlayerGroundFound = true;
+                break;
+            }
         }
     }
 
-    if (!groundFound) {
+    // Mount Teleport
+    if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
+        for (float height : MountGroundCheckHeights) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, waypointCoords.x, waypointCoords.y, height, true, true, true);
+            WAIT(100);
+
+            if (MISC::GET_GROUND_Z_FOR_3D_COORD(waypointCoords.x, waypointCoords.y, height, &waypointCoords.z, false)) {
+                waypointCoords.z += 3.0f;
+                MountGroundFound = true;
+                break;
+            }
+        }
+    }
+
+    // Vehicle Teleport
+    if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, false) && ENTITY::DOES_ENTITY_EXIST(vehicle) && !ENTITY::IS_ENTITY_DEAD(vehicle)) {
+        for (float height : VehicleGroundCheckHeights) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, waypointCoords.x, waypointCoords.y, height, true, true, true);
+            WAIT(100);
+
+            if (MISC::GET_GROUND_Z_FOR_3D_COORD(waypointCoords.x, waypointCoords.y, height, &waypointCoords.z, false)) {
+                waypointCoords.z += 3.0f;
+                VehicleGroundFound = true;
+                break;
+            }
+        }
+    }
+
+    if (!PlayerGroundFound && !MountGroundFound && !VehicleGroundFound) {
+        if (teleport_show_screen_fades_bool) {
+            CAM::DO_SCREEN_FADE_IN(250);
+        }
         UIUtil::PrintSubtitle("Teleport Failed: Unable to Find Ground.");
         return;
     }
 
-    if (teleport_show_screen_fades_bool) {
-        CAM::DO_SCREEN_FADE_OUT(200);
-        WAIT(400); 
-    }
-
-    if (PED::IS_PED_ON_MOUNT(playerPed)) {
+    if (PlayerGroundFound) {
         ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, waypointCoords.x, waypointCoords.y, waypointCoords.z, true, true, true);
         ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
+    }
 
+    if (MountGroundFound) {
         ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, waypointCoords.x, waypointCoords.y, waypointCoords.z, true, true, true);
         ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(mount, false);
     }
-    else {
-        ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, waypointCoords.x, waypointCoords.y, waypointCoords.z, true, true, true);
-        ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
-    }
 
-    if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-        PED::SET_PED_CAN_RAGDOLL(playerPed, true);
-        PED::SET_PED_CAN_RAGDOLL(mount, true);
+    if (VehicleGroundFound) {
+        ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, waypointCoords.x, waypointCoords.y, waypointCoords.z, true, true, true);
+        ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(vehicle, false);
     }
 
     if (teleport_show_screen_fades_bool) {
-        CAM::DO_SCREEN_FADE_IN(250);
+        CAM::DO_SCREEN_FADE_IN(450);
         WAIT(400);
     }
 }
+
 
 void Teleport_RemoveWaypointFunction() {
     if (MAP::IS_WAYPOINT_ACTIVE()) {
@@ -175,24 +254,16 @@ void Teleport_UseYawRotationFunction() {
 void Teleport_ForwardFunction() {
     Ped playerPed = PLAYER::PLAYER_PED_ID();
     Ped mount = PED::GET_MOUNT(playerPed);
+    Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
     if (ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(playerPed)) {
         Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true, true);
         float forwardOffset = 2.0f;
-        float heading = 0.0f;
+        float heading = teleport_use_yaw_rotation_bool ? CAM::GET_GAMEPLAY_CAM_ROT(2).z : ENTITY::GET_ENTITY_HEADING(playerPed);
 
-        if (teleport_use_yaw_rotation_bool) {
-            Vector3 camRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-            heading = camRot.z;
-        }
-        else {
-            heading = ENTITY::GET_ENTITY_HEADING(playerPed);
-        }
-
-        // Convert to radians and cast sin/cos to float
-        float radianHeading = static_cast<float>(heading * (M_PI / 180.0));
-        float sinHeading = static_cast<float>(sin(radianHeading));
-        float cosHeading = static_cast<float>(cos(radianHeading));
+        float radianHeading = heading * (static_cast<float>(M_PI) / 180.0f);
+        float sinHeading = sinf(radianHeading);
+        float cosHeading = cosf(radianHeading);
 
         Vector3 forwardPosition = {
             currentPosition.x + forwardOffset * -sinHeading,
@@ -205,22 +276,14 @@ void Teleport_ForwardFunction() {
             forwardPosition.z = groundZ + 1.0f;
         }
 
-        if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-            PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-            PED::SET_PED_CAN_RAGDOLL(mount, false);
-
+        if (vehicle) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, forwardPosition.x, forwardPosition.y, forwardPosition.z, true, true, true);
+        }
+        else if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, forwardPosition.x, forwardPosition.y, forwardPosition.z, true, true, true);
-            ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(mount, false);
-
-            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, forwardPosition.x, forwardPosition.y, forwardPosition.z, true, true, true);
-            ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
-
-            PED::SET_PED_CAN_RAGDOLL(playerPed, true);
-            PED::SET_PED_CAN_RAGDOLL(mount, true);
         }
         else {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, forwardPosition.x, forwardPosition.y, forwardPosition.z, true, true, true);
-            ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
         }
     }
 }
@@ -228,20 +291,20 @@ void Teleport_ForwardFunction() {
 void Teleport_BackwardsFunction() {
     Ped playerPed = PLAYER::PLAYER_PED_ID();
     Ped mount = PED::GET_MOUNT(playerPed);
+    Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
     if (ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(playerPed)) {
         Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true, true);
-        float forwardOffset = 2.0f;
+        float backwardOffset = 2.0f;
         float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
 
-        // Convert to radians and cast sin/cos to float
-        float radianHeading = static_cast<float>(heading * (M_PI / 180.0));
-        float sinHeading = static_cast<float>(sin(radianHeading));
-        float cosHeading = static_cast<float>(cos(radianHeading));
+        float radianHeading = heading * (static_cast<float>(M_PI) / 180.0f);
+        float sinHeading = sinf(radianHeading);
+        float cosHeading = cosf(radianHeading);
 
         Vector3 backwardPosition = {
-            currentPosition.x - forwardOffset * -sinHeading,
-            currentPosition.y - forwardOffset * cosHeading,
+            currentPosition.x - backwardOffset * -sinHeading,
+            currentPosition.y - backwardOffset * cosHeading,
             currentPosition.z
         };
 
@@ -250,22 +313,14 @@ void Teleport_BackwardsFunction() {
             backwardPosition.z = groundZ + 1.0f;
         }
 
-        if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-            PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-            PED::SET_PED_CAN_RAGDOLL(mount, false);
-
+        if (vehicle) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, backwardPosition.x, backwardPosition.y, backwardPosition.z, true, true, true);
+        }
+        else if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, backwardPosition.x, backwardPosition.y, backwardPosition.z, true, true, true);
-            ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(mount, false);
-
-            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, backwardPosition.x, backwardPosition.y, backwardPosition.z, true, true, true);
-            ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
-
-            PED::SET_PED_CAN_RAGDOLL(playerPed, true);
-            PED::SET_PED_CAN_RAGDOLL(mount, true);
         }
         else {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, backwardPosition.x, backwardPosition.y, backwardPosition.z, true, true, true);
-            ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
         }
     }
 }
@@ -273,15 +328,16 @@ void Teleport_BackwardsFunction() {
 void Teleport_LeftFunction() {
     Ped playerPed = PLAYER::PLAYER_PED_ID();
     Ped mount = PED::GET_MOUNT(playerPed);
+    Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
     if (ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(playerPed)) {
         Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true, true);
         float horizontalOffset = 2.0f;
         float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
 
-        // Precompute sin and cos values and explicitly cast to float
-        float sinHeading = static_cast<float>(sin(heading * (M_PI / 180.0)));
-        float cosHeading = static_cast<float>(cos(heading * (M_PI / 180.0)));
+        float radianHeading = static_cast<float>(heading * (M_PI / 180.0));
+        float sinHeading = static_cast<float>(sin(radianHeading));
+        float cosHeading = static_cast<float>(cos(radianHeading));
 
         Vector3 leftPosition = {
             currentPosition.x - horizontalOffset * cosHeading,
@@ -289,23 +345,16 @@ void Teleport_LeftFunction() {
             currentPosition.z
         };
 
-        // Only use ground Z check if absolutely necessary (skip for optimization)
-        /*
         float groundZ;
         if (MISC::GET_GROUND_Z_FOR_3D_COORD(leftPosition.x, leftPosition.y, leftPosition.z + 10.0f, &groundZ, false)) {
             leftPosition.z = groundZ + 1.0f;
         }
-        */
 
-        if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-            PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-            PED::SET_PED_CAN_RAGDOLL(mount, false);
-
+        if (vehicle) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, leftPosition.x, leftPosition.y, leftPosition.z, true, true, true);
+        }
+        else if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, leftPosition.x, leftPosition.y, leftPosition.z, true, true, true);
-            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, leftPosition.x, leftPosition.y, leftPosition.z, true, true, true);
-
-            PED::SET_PED_CAN_RAGDOLL(playerPed, true);
-            PED::SET_PED_CAN_RAGDOLL(mount, true);
         }
         else {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, leftPosition.x, leftPosition.y, leftPosition.z, true, true, true);
@@ -316,15 +365,16 @@ void Teleport_LeftFunction() {
 void Teleport_RightFunction() {
     Ped playerPed = PLAYER::PLAYER_PED_ID();
     Ped mount = PED::GET_MOUNT(playerPed);
+    Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
     if (ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(playerPed)) {
         Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true, true);
         float horizontalOffset = 2.0f;
         float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
 
-        // Precompute sin and cos values and explicitly cast to float
-        float sinHeading = static_cast<float>(sin(heading * (M_PI / 180.0)));
-        float cosHeading = static_cast<float>(cos(heading * (M_PI / 180.0)));
+        float radianHeading = static_cast<float>(heading * (M_PI / 180.0));
+        float sinHeading = static_cast<float>(sin(radianHeading));
+        float cosHeading = static_cast<float>(cos(radianHeading));
 
         Vector3 rightPosition = {
             currentPosition.x + horizontalOffset * cosHeading,
@@ -332,23 +382,16 @@ void Teleport_RightFunction() {
             currentPosition.z
         };
 
-        // Only use ground Z check if absolutely necessary (skip for optimization)
-        /*
         float groundZ;
         if (MISC::GET_GROUND_Z_FOR_3D_COORD(rightPosition.x, rightPosition.y, rightPosition.z + 10.0f, &groundZ, false)) {
             rightPosition.z = groundZ + 1.0f;
         }
-        */
 
-        if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-            PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-            PED::SET_PED_CAN_RAGDOLL(mount, false);
-
+        if (vehicle) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, rightPosition.x, rightPosition.y, rightPosition.z, true, true, true);
+        }
+        else if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, rightPosition.x, rightPosition.y, rightPosition.z, true, true, true);
-            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, rightPosition.x, rightPosition.y, rightPosition.z, true, true, true);
-
-            PED::SET_PED_CAN_RAGDOLL(playerPed, true);
-            PED::SET_PED_CAN_RAGDOLL(mount, true);
         }
         else {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, rightPosition.x, rightPosition.y, rightPosition.z, true, true, true);
@@ -359,10 +402,11 @@ void Teleport_RightFunction() {
 void Teleport_UpFunction() {
     Ped playerPed = PLAYER::PLAYER_PED_ID();
     Ped mount = PED::GET_MOUNT(playerPed);
+    Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
     if (ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(playerPed)) {
         Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true, true);
-        float verticalOffset = 2.0f; 
+        float verticalOffset = 2.0f;
 
         Vector3 upPosition = {
             currentPosition.x,
@@ -370,16 +414,11 @@ void Teleport_UpFunction() {
             currentPosition.z + verticalOffset
         };
 
-        if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-            PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-            PED::SET_PED_CAN_RAGDOLL(mount, false);
-
+        if (vehicle) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, upPosition.x, upPosition.y, upPosition.z, true, true, true);
+        }
+        else if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, upPosition.x, upPosition.y, upPosition.z, true, true, true);
-
-            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, upPosition.x, upPosition.y, upPosition.z, true, true, true);
-
-            PED::SET_PED_CAN_RAGDOLL(playerPed, true);
-            PED::SET_PED_CAN_RAGDOLL(mount, true);
         }
         else {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, upPosition.x, upPosition.y, upPosition.z, true, true, true);
@@ -390,33 +429,35 @@ void Teleport_UpFunction() {
 void Teleport_DownFunction() {
     Ped playerPed = PLAYER::PLAYER_PED_ID();
     Ped mount = PED::GET_MOUNT(playerPed);
+    Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(playerPed, false);
 
     if (ENTITY::DOES_ENTITY_EXIST(playerPed) && !ENTITY::IS_ENTITY_DEAD(playerPed)) {
         Vector3 currentPosition = ENTITY::GET_ENTITY_COORDS(playerPed, true, true);
-        float verticalOffset = 5.0f;
+        float verticalOffset = 2.0f;
 
         Vector3 downPosition = {
             currentPosition.x,
             currentPosition.y,
-            currentPosition.z - verticalOffset 
+            currentPosition.z - verticalOffset
         };
 
-        if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
-            PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-            PED::SET_PED_CAN_RAGDOLL(mount, false);
+        float groundZ;
+        if (MISC::GET_GROUND_Z_FOR_3D_COORD(downPosition.x, downPosition.y, downPosition.z + 10.0f, &groundZ, false)) {
+            downPosition.z = groundZ - 10.0f;
+        }
+        else {
+            downPosition.z = currentPosition.z - verticalOffset;
+        }
 
+        if (vehicle) {
+            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(vehicle, downPosition.x, downPosition.y, downPosition.z, true, true, true);
+        }
+        else if (PED::IS_PED_ON_MOUNT(playerPed) && ENTITY::DOES_ENTITY_EXIST(mount) && !ENTITY::IS_ENTITY_DEAD(mount)) {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(mount, downPosition.x, downPosition.y, downPosition.z, true, true, true);
-            ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(mount, false);
-
-            ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, downPosition.x, downPosition.y, downPosition.z, true, true, true);
-            ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
-
-            PED::SET_PED_CAN_RAGDOLL(playerPed, true);
-            PED::SET_PED_CAN_RAGDOLL(mount, true);
         }
         else {
             ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, downPosition.x, downPosition.y, downPosition.z, true, true, true);
-            ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
         }
     }
 }
+

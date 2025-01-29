@@ -89,6 +89,12 @@ void Weather_GroundSnowFunction() {
     }
 }
 
+void  Weather_SmoothTransitionFunction() {
+    if (weather_smooth_transition_bool) {
+
+    }
+}
+
 void Weather_RandomWeatherFunction() {
     std::random_device rd;
     std::mt19937 gen(rd());
