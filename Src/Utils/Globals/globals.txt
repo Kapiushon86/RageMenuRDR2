@@ -1,0 +1,3 @@
+
+getGlobalPtr(1879534 + 44) // New Austin Sniper
+getGlobalPtr(1900383 + 316) // Disables horse whistling this frame.
