@@ -33,20 +33,19 @@ And RageMenu will still be receiving many updates, becoming open source will not
 
 FOLDER STRUCTURE
 ----------------
-
-Ui/Options - Contains all option types
-
-Ui/ - Contains all ui elements.
-
-Thirdparty/ - Contains all third party uses so far is discord presence and json for modern c++.
-
 Menu/Base/Submenu/Main/ - Contains all the actual features not the functions but the features itself and then functions are called under those features.
 
 Utils/Config - All config related files, so folder and file creation, saving and loading ini toggles open key stuff etc, Menu.cpp located in Ui/ also contains some code for the saving and loading the open keys and toggles. 
 
+Utils/Functions - Contains all the actual functions and logic for all features.
+
 Utils/Saving/States - Contains all the definitions and default states for all toggles and vectors.
 
-Utils/Functions - Contains all the actual functions and logic for all features.
+Ui/ - Contains all ui elements.
+
+Ui/Options - Contains all option types
+
+Thirdparty/ - Contains all third party uses so far is discord presence and json for modern c++.
 
 My Folder And File Setup Is Extremely Well Organized And You Should Have No Problem Finding Everything. 
 
