@@ -39,6 +39,8 @@ Utils/Config - All config related files, so folder and file creation, saving and
 
 Utils/Functions - Contains all the actual functions and logic for all features.
 
+Utils/Functions/UpdateFeaturesLoop - These are features that are called every frame like super jump etc, all the update features loop are called in script.cpp main loop and then functions are placed in these files for better organization rather then making a loop on every feature that needs to be updated.
+
 Utils/Saving/States - Contains all the definitions and default states for all toggles and vectors.
 
 Ui/ - Contains all ui elements.
@@ -46,6 +48,8 @@ Ui/ - Contains all ui elements.
 Ui/Options - Contains all option types
 
 Thirdparty/ - Contains all third party uses so far is discord presence and json for modern c++.
+
+Script.cpp - Main File, main initialization done here setups etc do I even have to explain?
 
 My Folder And File Setup Is Extremely Well Organized And You Should Have No Problem Finding Everything. 
 
