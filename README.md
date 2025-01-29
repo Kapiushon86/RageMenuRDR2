@@ -110,6 +110,5 @@ The RageMenu source code is open for you to explore and analyze. Here's how you 
   
 Please note that while feedback and contributions are welcome, any modifications or use of the source code must adhere to the rules outlined in the RIGHTS section. Unauthorized redistribution, repurposing, or misuse of the source code is strictly prohibited.
 
-![Uploading image.png…]()
-
+![image](https://github.com/user-attachments/assets/ccc5b214-8779-42f2-8fe3-032d5565b83f)
 
