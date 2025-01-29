@@ -35,7 +35,7 @@ FOLDER STRUCTURE
 ----------------
 Menu/Base/Submenu/Main/ - Contains all the actual features not the functions but the features itself and then functions are called under those features.
 
-Utils/Config - All config related files, so folder and file creation, saving and loading ini toggles open key stuff etc, Menu.cpp located in Ui/ also contains some code for the saving and loading the open keys and toggles. 
+Utils/Config - All config related files, so folder and file creation, saving and loading ini toggles open key stuff etc, Menu.cpp located in Ui/ also contains some code for the saving and loading the open keys. 
 
 Utils/Functions - Contains all the actual functions and logic for all features.
 
