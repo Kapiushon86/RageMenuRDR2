@@ -7,6 +7,7 @@ void DisablesUpdateFeaturesLoop() {
 	Disables_DisableSimpleHudFunction();
 	Disables_DisableHelpTextFunction();
 	Disables_DisableLocationInfoFunction();
+	Disables_DisableNewAustinSniperFunction();
 	Disables_DisableRadarWhenMenuOpenIsFunction();
 	Disables_DisableHorseWhistleOnControllerFunction();
 

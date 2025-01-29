@@ -20,3 +20,34 @@ void Bypasses_GuardZonesFunction() {
 
     }
 }
+
+SC_PROFANITY_CHECK_STRING_FUNC SC_PROFANITY_CHECK_STRING = nullptr;
+SC_PROFANITY_GET_CHECK_IS_VALID_FUNC SC_PROFANITY_GET_CHECK_IS_VALID = nullptr;
+SC_PROFANITY_GET_CHECK_IS_PENDING_FUNC SC_PROFANITY_GET_CHECK_IS_PENDING = nullptr;
+SC_PROFANITY_GET_STRING_PASSED_FUNC SC_PROFANITY_GET_STRING_PASSED = nullptr;
+SC_PROFANITY_GET_STRING_STATUS_FUNC SC_PROFANITY_GET_STRING_STATUS = nullptr;
+
+void Bypasses_ProfanityCheckFunction() {
+    if (bypasses_profanity_check_bool) {
+        SC_PROFANITY_CHECK_STRING = [](const char* string, int* token) -> BOOL {
+            return TRUE;
+            };
+
+        SC_PROFANITY_GET_CHECK_IS_VALID = [](int token) -> BOOL {
+            return TRUE;
+            };
+
+        SC_PROFANITY_GET_CHECK_IS_PENDING = [](int token) -> BOOL {
+            return FALSE;
+            };
+
+        SC_PROFANITY_GET_STRING_PASSED = [](int token) -> BOOL {
+            return TRUE;
+            };
+
+        SC_PROFANITY_GET_STRING_STATUS = [](int token) -> int {
+            return 1;
+            };
+
+    }
+}

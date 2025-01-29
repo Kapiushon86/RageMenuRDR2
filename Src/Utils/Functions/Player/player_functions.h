@@ -14,6 +14,7 @@ void Player_AntiMeleeFunction();
 void Player_EveryoneIgnoreFunction();
 void Player_NoRagdollFunction();
 void Player_QuickSkinFunction();
+void Player_PerfectSkinFunction();
 void Player_NeverLooseHatFunction();
 void Player_ClimbSteepSlopesFunction();
 void Player_AlwaysShowCoresFunction();

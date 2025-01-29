@@ -2,6 +2,7 @@
 #define MODIFIERS_FUNCTIONS_H
 
 void Modifiers_InfiniteStaminaFunction();
+void Modifiers_InfiniteSwimFunction();
 void Modifiers_InfiniteDeadEyeFunction();
 void Modifiers_InfiniteEagleEyeFunction();
 void Modifiers_SuperChargedCoresFunction();

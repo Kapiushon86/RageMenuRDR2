@@ -1,6 +1,23 @@
 #ifndef BYPASSES_FUNCTIONS_H
 #define BYPASSES_FUNCTIONS_H
 
-void Bypasses_GuardZonesFunction();
+#include <Windows.h>
 
-#endif 
+extern "C" {
+    typedef BOOL(*SC_PROFANITY_CHECK_STRING_FUNC)(const char* string, int* token);
+    typedef BOOL(*SC_PROFANITY_GET_CHECK_IS_VALID_FUNC)(int token);
+    typedef BOOL(*SC_PROFANITY_GET_CHECK_IS_PENDING_FUNC)(int token);
+    typedef BOOL(*SC_PROFANITY_GET_STRING_PASSED_FUNC)(int token);
+    typedef int (*SC_PROFANITY_GET_STRING_STATUS_FUNC)(int token);
+
+    extern SC_PROFANITY_CHECK_STRING_FUNC SC_PROFANITY_CHECK_STRING;
+    extern SC_PROFANITY_GET_CHECK_IS_VALID_FUNC SC_PROFANITY_GET_CHECK_IS_VALID;
+    extern SC_PROFANITY_GET_CHECK_IS_PENDING_FUNC SC_PROFANITY_GET_CHECK_IS_PENDING;
+    extern SC_PROFANITY_GET_STRING_PASSED_FUNC SC_PROFANITY_GET_STRING_PASSED;
+    extern SC_PROFANITY_GET_STRING_STATUS_FUNC SC_PROFANITY_GET_STRING_STATUS;
+}
+
+void Bypasses_GuardZonesFunction();
+void Bypasses_ProfanityCheckFunction();
+
+#endif

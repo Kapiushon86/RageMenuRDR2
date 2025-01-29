@@ -2,7 +2,6 @@
 #define MISC_FUNCTIONS_H
 
 #include "../../../Utils/Config/config.h"
-#include "../../../ThirdParty/discord-rpc/win64-static/include/discord_rpc.h"
 
 void Misc_WelcomeMessageFunction();
 void Misc_SeasonalGreetingsFunction();

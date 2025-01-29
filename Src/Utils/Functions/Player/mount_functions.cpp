@@ -118,23 +118,39 @@ void Mount_LevitateFunction() {
 }
 
 void Mount_InfiniteStaminaFunction() {
-    Ped playerPed = PLAYER::PLAYER_PED_ID();
-    Ped targetMount = 0;
+    if (mount_infinite_stamina_bool) {
+        Ped playerPed = PLAYER::PLAYER_PED_ID();
+        Ped targetMount = 0;
 
-    if (PED::IS_PED_ON_MOUNT(playerPed)) {
-        targetMount = PED::GET_MOUNT(playerPed);
-    }
-
-    if (ENTITY::DOES_ENTITY_EXIST(targetMount) && !ENTITY::IS_ENTITY_DEAD(targetMount)) {
-        if (mount_infinite_stamina_bool) {
-            float stamina_bar = PED::_GET_PED_STAMINA(targetMount);
-            ATTRIBUTE::_SET_ATTRIBUTE_CORE_VALUE(targetMount, AttributeCore::ATTRIBUTE_CORE_STAMINA, 100.0f);
-            PED::_CHANGE_PED_STAMINA(targetMount, stamina_bar);
-
-            mount_was_infinite_stamina_bool = true;
+        if (PED::IS_PED_ON_MOUNT(playerPed)) {
+            targetMount = PED::GET_MOUNT(playerPed);
         }
-        else if (!mount_infinite_stamina_bool && mount_was_infinite_stamina_bool) {
-            mount_was_infinite_stamina_bool = false;
+
+        if (ENTITY::DOES_ENTITY_EXIST(targetMount) && !ENTITY::IS_ENTITY_DEAD(targetMount)) {
+            ATTRIBUTE::_SET_ATTRIBUTE_CORE_VALUE(targetMount, AttributeCore::ATTRIBUTE_CORE_STAMINA,
+                ATTRIBUTE::GET_MAX_ATTRIBUTE_POINTS(targetMount, AttributeCore::ATTRIBUTE_CORE_STAMINA));
+            PED::_CHANGE_PED_STAMINA(targetMount, PED::_GET_PED_MAX_STAMINA(targetMount));
+            ATTRIBUTE::_SET_ATTRIBUTE_CORE_VALUE(targetMount, (int)AttributeCore::ATTRIBUTE_CORE_STAMINA, 100);
+        }
+    }
+}
+
+void Mount_InfiniteSwimFunction() {
+    if (mount_infinite_swim_bool) {
+        Ped playerPed = PLAYER::PLAYER_PED_ID();
+        Ped targetMount = 0;
+
+        if (PED::IS_PED_ON_MOUNT(playerPed)) {
+            targetMount = PED::GET_MOUNT(playerPed);
+        }
+
+        if (ENTITY::DOES_ENTITY_EXIST(targetMount) && !ENTITY::IS_ENTITY_DEAD(targetMount)) {
+            if (PED::IS_PED_SWIMMING(targetMount)) {
+                ATTRIBUTE::_SET_ATTRIBUTE_CORE_VALUE(targetMount, AttributeCore::ATTRIBUTE_CORE_STAMINA,
+                    ATTRIBUTE::GET_MAX_ATTRIBUTE_POINTS(targetMount, AttributeCore::ATTRIBUTE_CORE_STAMINA));
+                PED::_CHANGE_PED_STAMINA(targetMount, PED::_GET_PED_MAX_STAMINA(targetMount));
+                ATTRIBUTE::_SET_ATTRIBUTE_CORE_VALUE(targetMount, (int)AttributeCore::ATTRIBUTE_CORE_STAMINA, 100);
+            }
         }
     }
 }
@@ -284,6 +300,82 @@ void Mount_MaxBondingFunction() {
             COMPENDIUM::COMPENDIUM_HORSE_BONDING(targetMount, 4);
         }
     }
+}
+
+void Mount_TeleportLastMountToPlayerFunction() {
+    if (LastMount == 0) {
+        UIUtil::PrintSubtitle("No Last Mount Found.");
+        return;
+    }
+
+    Ped playerPed = PLAYER::PLAYER_PED_ID();
+    Vector3 playerCoords = ENTITY::GET_ENTITY_COORDS(playerPed, true, true);
+
+    const float MountGroundCheckHeights[] = {
+        100.0, 80.0, 60.0, 40.0, 20.0, 0.0, 120.0, 180.0, 240.0,
+        300.0, 360.0, 420.0, 480.0, 540.0, 600.0
+    };
+
+    bool MountGroundFound = false;
+
+    Vector3 offset = { 2.0f, 2.0f, 0.0f };
+
+    for (float height : MountGroundCheckHeights) {
+        ENTITY::SET_ENTITY_COORDS_NO_OFFSET(LastMount, playerCoords.x + offset.x, playerCoords.y + offset.y, height, true, true, true);
+        WAIT(100);
+
+        if (MISC::GET_GROUND_Z_FOR_3D_COORD(playerCoords.x + offset.x, playerCoords.y + offset.y, height, &playerCoords.z, false)) {
+            playerCoords.z += 3.0f;
+            MountGroundFound = true;
+            break;
+        }
+    }
+
+    if (!MountGroundFound) {
+        UIUtil::PrintSubtitle("Teleport Failed: Unable to Find Ground.");
+        return;
+    }
+
+    ENTITY::SET_ENTITY_COORDS_NO_OFFSET(LastMount, playerCoords.x + offset.x, playerCoords.y + offset.y, playerCoords.z, true, true, true);
+    ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(LastMount, false);
+}
+
+void Mount_TeleportPlayerToLastMountFunction() {
+    if (LastMount == 0) {
+        UIUtil::PrintSubtitle("No Last Mount Found.");
+        return;
+    }
+
+    Ped playerPed = PLAYER::PLAYER_PED_ID();
+    Vector3 mountCoords = ENTITY::GET_ENTITY_COORDS(LastMount, true, true);
+
+    const float PlayerGroundCheckHeights[] = {
+        100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0,
+        450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0
+    };
+
+    bool PlayerGroundFound = false;
+
+    Vector3 offset = { 2.0f, 2.0f, 0.0f };
+
+    for (float height : PlayerGroundCheckHeights) {
+        ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, mountCoords.x + offset.x, mountCoords.y + offset.y, height, true, true, true);
+        WAIT(100);
+
+        if (MISC::GET_GROUND_Z_FOR_3D_COORD(mountCoords.x + offset.x, mountCoords.y + offset.y, height, &mountCoords.z, false)) {
+            mountCoords.z += 3.0f;
+            PlayerGroundFound = true;
+            break;
+        }
+    }
+
+    if (!PlayerGroundFound) {
+        UIUtil::PrintSubtitle("Teleport Failed: Unable to Find Ground.");
+        return;
+    }
+
+    ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, mountCoords.x + offset.x, mountCoords.y + offset.y, mountCoords.z, true, true, true);
+    ENTITY::PLACE_ENTITY_ON_GROUND_PROPERLY(playerPed, false);
 }
 
 void Mount_AlwaysShowCoresFunction() {

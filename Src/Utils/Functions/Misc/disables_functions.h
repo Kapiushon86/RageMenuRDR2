@@ -5,6 +5,7 @@ void Disables_DisableAllHudFunction();
 void Disables_DisableSimpleHudFunction();
 void Disables_DisableHelpTextFunction();
 void Disables_DisableLocationInfoFunction();
+void Disables_DisableNewAustinSniperFunction();
 void Disables_DisableRadarWhenMenuOpenIsFunction();
 void Disables_DisableHorseWhistleOnControllerFunction();
 

@@ -10,6 +10,7 @@ void PlayerUpdateFeaturesLoop() {
     Player_EveryoneIgnoreFunction();
     Player_NoRagdollFunction();
     Player_QuickSkinFunction();
+    Player_PerfectSkinFunction();
     Player_NeverLooseHatFunction();
     Player_AlwaysShowCoresFunction();
     Player_AlwaysCleanFunction();

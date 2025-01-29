@@ -194,6 +194,12 @@ void Player_QuickSkinFunction() {
     }
 }
 
+void Player_PerfectSkinFunction() {
+    if (player_perfect_skin_bool) {
+
+    }
+}
+
 void Player_NeverLooseHatFunction() {
    
 }

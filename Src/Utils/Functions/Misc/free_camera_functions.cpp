@@ -52,8 +52,8 @@ void FreeCamera_FreeCameraFunction() {
             }
         }
 
-        float moveSpeed = 0.3f;
-        float mouseSensitivity = 4.0f;
+        float moveSpeed = 2.0f;
+        float mouseSensitivity = 5.0f;
 
         float mouseX = static_cast<float>(-PAD::GET_CONTROL_NORMAL(0, INPUT_LOOK_LR) * mouseSensitivity);
         float mouseY = static_cast<float>(-PAD::GET_CONTROL_NORMAL(0, INPUT_LOOK_UD) * mouseSensitivity);

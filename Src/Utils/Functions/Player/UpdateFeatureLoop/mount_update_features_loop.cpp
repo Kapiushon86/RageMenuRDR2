@@ -6,12 +6,9 @@ void MountUpdateFeaturesLoop() {
 
     //Mount_PreferenceFunction(mount_target_preference);
     Mount_LevitateFunction();
+    Mount_InfiniteStaminaFunction();
+    Mount_InfiniteSwimFunction();
     Mount_FearlessFunction();
     Mount_AlwaysShowCoresFunction();
     Mount_AlwaysCleanFunction();
-
-    if (mount_infinite_stamina_bool || mount_was_infinite_stamina_bool)
-    {
-        Mount_InfiniteStaminaFunction();
-    }
 }

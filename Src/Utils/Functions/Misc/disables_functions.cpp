@@ -47,6 +47,23 @@ void Disables_DisableLocationInfoFunction() {
     }
 }
 
+uint64_t* getGlobalPtr(uint64_t index) {
+    return reinterpret_cast<uint64_t*>(index); 
+}
+
+void Disables_DisableNewAustinSniperFunction() {
+    uint64_t* sniperTimer = getGlobalPtr(1879534 + 44);
+
+    if (sniperTimer) {
+        if (disables_disable_new_austin_sniper_bool) {
+            *sniperTimer = INT_MAX;
+        }
+        else {
+            *sniperTimer = 0; 
+        }
+    }
+}
+
 void Disables_DisableRadarWhenMenuOpenIsFunction() {
     // Done inside Ui/Menu.cpp
 }
