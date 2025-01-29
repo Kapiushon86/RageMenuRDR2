@@ -17,8 +17,6 @@ FEATURES
 
 RageMenu is an all-purpose mod focused on quality of life and gameplay enhancements, making the game’s story and exploration even more enjoyable.
 
-A full list of features can be found on our nexus page https://www.nexusmods.com/reddeadredemption2/mods/5244/?tab=description
-
 OUR GOAL
 --------
 
