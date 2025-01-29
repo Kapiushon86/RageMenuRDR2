@@ -36,21 +36,19 @@ FOLDER STRUCTURE
 
 Ui/Options - Contains all option types
 
-Ui/ - Contains all ui elements drawing, writing sprites, menu version, etc basically everything you see. Menuversion.h is where current version is defined, drawing.cpp handles most of the drawing but some other are done throughout ui and SubmenuIDs contains all the submenu ids which are needed when creating a new submenu.
+Ui/ - Contains all ui elements.
 
-Thirdparty/ - Contains all third party uses, as of now its only discord presence.
+Thirdparty/ - Contains all third party uses so far is discord presence and json for modern c++.
 
-Menu/Base/Submenu/Main/ - Contains all the actual features not the function but the features itself and then functions are called under those features.
+Menu/Base/Submenu/Main/ - Contains all the actual features not the functions but the features itself and then functions are called under those features.
 
-Utils/Config - All config related files, so all folders and files created here loading ini config stuff some logging etc.
+Utils/Config - All config related files, so folder and file creation, saving and loading ini toggles open key stuff etc, Menu.cpp located in Ui/ also contains some code for the saving and loading the open keys and toggles. 
 
-Utils/Saving/States - Inside here you will find a bunch of submenu folders this is where the default states of each file is located for bool and vector features, .cpp is where default states are stored .h is where they are defined.
+Utils/Saving/States - Contains all the definitions and default states for all toggles and vectors.
 
-Utils/Functions - There will be many folder submenus here inside will also be many files in most, there will be an cpp file and an h file the functions cpp files contain all the function logic for all the features the h defines all the functions, additionally inside each of these submenu folders is another folder called UpdateFeaturesLoop. These are where features are stored that will run every frame this is called in script.cpp and put in every submenu folder to make easier and more organized.
+Utils/Functions - Contains all the actual functions and logic for all features.
 
-You will also see many folders and files or just code that dosnt really have anything like blank features with no logic etc these are mostly place holders or planned features that are in development or planned development features and just have not been done yet.
-
-Overall my setup and folder structure is well organized and neatly kept and you should have no probelm finding everything.
+My Folder And File Setup Is Extremely Well Organized And You Should Have No Problem Finding Everything. 
 
 RIGHTS
 ------
