@@ -80,6 +80,7 @@
 // Settings
 
 #include "Utils/Functions/Settings/UpdateFeaturesLoop/settings_update_features_loop.h"
+#include "Utils/Functions/Settings/UpdateFeaturesLoop/themes_update_features_loop.h"
 #include "Utils/Functions/Settings/UpdateFeaturesLoop/saving_update_features_loop.h"
 #include "Utils/Functions/Settings/UpdateFeaturesLoop/logging_update_features_loop.h"
 
@@ -242,14 +243,24 @@ void InitializeMenu() {
     }
 
     g_Menu->AddSubmenu("RageMenu", "Main", Submenu_main, submenuPriority, [](Submenu* mainMenu) {
+
         g_PlayerSubmenu = new CPlayerSubmenu();
         g_PlayerSubmenu->Init();
+
+        // g_NetworkSubmenu = new CNetworkSubmenu();
+       // g_NetworkSubmenu->Init();
 
         g_RecoverySubmenu = new CRecoverySubmenu();
         g_RecoverySubmenu->Init();
 
         g_WeaponsSubmenu = new CWeaponsSubmenu();
         g_WeaponsSubmenu->Init();
+
+        g_TeleportSubmenu = new CTeleportSubmenu();
+        g_TeleportSubmenu->Init();
+
+        g_SpawnerSubmenu = new CSpawnerSubmenu();
+        g_SpawnerSubmenu->Init();
 
         g_WorldSubmenu = new CWorldSubmenu();
         g_WorldSubmenu->Init();
@@ -259,15 +270,6 @@ void InitializeMenu() {
 
         g_SettingsSubmenu = new CSettingsSubmenu();
         g_SettingsSubmenu->Init();
-
-        // g_NetworkSubmenu = new CNetworkSubmenu();
-        // g_NetworkSubmenu->Init();
-
-         g_TeleportSubmenu = new CTeleportSubmenu();
-         g_TeleportSubmenu->Init();
-
-         g_SpawnerSubmenu = new CSpawnerSubmenu();
-         g_SpawnerSubmenu->Init();
 
         // g_CreditsSubmenu = new CCreditsSubmenu();
         // g_CreditsSubmenu->Init();
@@ -337,6 +339,7 @@ void UpdateFeaturesLoop() {
     // Settings
 
     SettingsUpdateFeaturesLoop();
+    ThemesUpdateFeaturesLoop();
     SavingUpdateFeaturesLoop();
     LoggingUpdateFeaturesLoop();
 
