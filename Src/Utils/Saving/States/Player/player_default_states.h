@@ -14,6 +14,7 @@ extern bool player_super_punch_bool;
 extern bool player_one_hit_ko_bool;
 extern bool player_anti_melee_bool;
 extern bool player_quick_skin_bool;
+extern bool player_perfect_skin_bool;
 extern bool player_never_loose_hat_bool;
 extern bool player_climb_steep_slopes_bool;
 extern bool player_no_ragdoll_bool;

@@ -4,6 +4,7 @@
 extern bool weather_freeze_weather_bool;
 extern bool weather_loop_weather_bool;
 extern bool weather_ground_snow_bool;
+extern bool weather_smooth_transition_bool;
 extern bool lastGroundSnowState;
 
 

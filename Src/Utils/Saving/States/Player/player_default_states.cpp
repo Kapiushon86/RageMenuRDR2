@@ -10,6 +10,7 @@ bool player_super_punch_bool = false;
 bool player_one_hit_ko_bool = false;
 bool player_anti_melee_bool = false;
 bool player_quick_skin_bool = false;
+bool player_perfect_skin_bool = false;
 bool player_never_loose_hat_bool = false;
 bool player_climb_steep_slopes_bool = false;
 bool player_no_ragdoll_bool = false;

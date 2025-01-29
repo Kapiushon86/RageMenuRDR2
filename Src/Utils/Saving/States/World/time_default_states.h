@@ -4,5 +4,6 @@
 extern bool time_freeze_time_bool;
 extern bool time_loop_time_bool;
 extern bool time_sync_with_system_bool;
+extern bool time_smooth_transition_bool;
 
 #endif
