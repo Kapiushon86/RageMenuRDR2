@@ -1,6 +1,7 @@
 #include "modifiers.h"
 #include "../../../../../Utils/Saving/States/Player/modifiers_default_states.h"
 #include "../../../../../Utils/Functions/Player/modifiers_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 CModifiersSubmenu::eModifiersSubmenuID Submenu_Modifiers = CModifiersSubmenu::Submenu_Modifiers;
 CModifiersSubmenu* g_ModifiersSubmenu = nullptr;
@@ -8,10 +9,16 @@ const int submenuPriority = 8;
 
 void CModifiersSubmenu::Init() {
 
-    g_Menu->AddSubmenu("RageMenu", "Main > Player > Modifiers", Submenu_modifiers, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > Modifiers" : "Modifiers";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_modifiers, submenuPriority, [](Submenu* sub) {
 
         sub->AddBoolOption("Infinite Stamina", "", &modifiers_infinite_stamina_bool, [=] {
             Modifiers_InfiniteStaminaFunction();
+            });
+
+        sub->AddBoolOption("Infinite Swim", "", &modifiers_infinite_swim_bool, [=] {
+            Modifiers_InfiniteSwimFunction();
             });
 
         sub->AddBoolOption("Infinite Dead Eye", "", &modifiers_infinite_dead_eye_bool, [=] {

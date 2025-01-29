@@ -3,6 +3,7 @@
 #include "dogs.h"
 #include "../../../../../Utils/Saving/States/Spawner/animals_default_states.h"
 #include "../../../../../Utils/Functions/Spawner/animals_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 CAnimalsSubmenu::eAnimalsSubmenuID Submenu_Animals = CAnimalsSubmenu::Submenu_Animals;
 CAnimalsSubmenu* g_AnimalsSubmenu = nullptr;
@@ -11,13 +12,16 @@ const int submenuPriority = 8;
 
 void CAnimalsSubmenu::Init()
 {
-    g_Legendary_AnimalsSubmenu = new CLegendary_AnimalsSubmenu();
+   /* g_Legendary_AnimalsSubmenu = new CLegendary_AnimalsSubmenu();
     g_Legendary_AnimalsSubmenu->Init();
 
     g_DogsSubmenu = new CDogsSubmenu();
     g_DogsSubmenu->Init();
+    */
 
-    g_Menu->AddSubmenu("RageMenu", "Main > Spawner > Peds > Animals", Submenu_animals, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > Spawner > Peds > Animals" : "Animals";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_animals, submenuPriority, [](Submenu* sub) {
       //  sub->AddSubmenuOption("Legendary Animals", "", Submenu_legendary_animals);
         //sub->AddSubmenuOption("Dogs", "", Submenu_dogs);
 

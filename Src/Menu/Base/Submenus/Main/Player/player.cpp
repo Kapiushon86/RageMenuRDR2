@@ -11,6 +11,7 @@
 #include "effects_particles.h"
 #include "../../../../../Utils/Saving/States/Player/player_default_states.h"
 #include "../../../../../Utils/Functions/Player/player_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 CPlayerSubmenu::ePlayerSubmenuID Submenu_Player = CPlayerSubmenu::Submenu_Player;
 CPlayerSubmenu* g_PlayerSubmenu = nullptr;
@@ -52,7 +53,9 @@ void CPlayerSubmenu::Init() {
     g_Effects_ParticlesSubmenu = new CEffects_ParticlesSubmenu();
     g_Effects_ParticlesSubmenu->Init();
 
-    g_Menu->AddSubmenu("RageMenu", "Main > Player", Submenu_player, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > Player" : "Player";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_player, submenuPriority, [](Submenu* sub) {
         sub->AddSubmenuOption("No Clip", "", Submenu_no_clip);
         sub->AddSubmenuOption("Mount", "", Submenu_mount);
         sub->AddSubmenuOption("Vehicle", "", Submenu_vehicle);
@@ -121,6 +124,11 @@ void CPlayerSubmenu::Init() {
         sub->AddBoolOption("Quick Skin", "", &player_quick_skin_bool, [] {
             Player_QuickSkinFunction();
             });
+
+       /* sub->AddBoolOption("Perfect Skin", "Always Get Perfect Skin Quality", &player_perfect_skin_bool, [] {
+            Player_PerfectSkinFunction();
+            });
+            */
 
       /*  sub->AddBoolOption("Never Loose Hat", "", &player_never_loose_hat_bool, [] {
             Player_NeverLooseHatFunction();

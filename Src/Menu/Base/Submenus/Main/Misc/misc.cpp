@@ -6,6 +6,7 @@
 #include "links.h"
 #include "../../../../../Utils/Saving/States/Misc/misc_default_states.h"
 #include "../../../../../Utils/Functions/Misc/misc_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 CMiscSubmenu::eMiscSubmenuID Submenu_Misc = CMiscSubmenu::Submenu_Misc;
 CMiscSubmenu* g_MiscSubmenu = nullptr;
@@ -20,8 +21,8 @@ void CMiscSubmenu::Init()
     g_DisablesSubmenu = new CDisablesSubmenu();
     g_DisablesSubmenu->Init();
 
-    //g_BypassesSubmenu = new CBypassesSubmenu();
-    //g_BypassesSubmenu->Init();
+  //  g_BypassesSubmenu = new CBypassesSubmenu();
+  //  g_BypassesSubmenu->Init();
 
     g_Wav_PlayerSubmenu = new CWav_PlayerSubmenu();
     g_Wav_PlayerSubmenu->Init();
@@ -29,10 +30,13 @@ void CMiscSubmenu::Init()
     g_LinksSubmenu = new CLinksSubmenu();
     g_LinksSubmenu->Init();
 
-    g_Menu->AddSubmenu("RageMenu", "Main > Misc", Submenu_misc, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > Misc" : "Misc";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_misc, submenuPriority, [](Submenu* sub) {
+
         sub->AddSubmenuOption("Free Camera", "", Submenu_free_camera);
         sub->AddSubmenuOption("Disables", "", Submenu_disables);
-      //sub->AddSubmenuOption("Bypasses", "", Submenu_bypasses);
+     // sub->AddSubmenuOption("Bypasses", "", Submenu_bypasses);
         sub->AddSubmenuOption("Wav Player", "", Submenu_wav_player);
         sub->AddSubmenuOption("Links", "", Submenu_links);
         sub->AddEmptyOption("Settings");

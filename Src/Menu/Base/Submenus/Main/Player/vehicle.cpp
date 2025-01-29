@@ -1,6 +1,7 @@
 #include "vehicle.h"
 #include "../../../../../Utils/Saving/States/Player/vehicle_default_states.h"
 #include "../../../../../Utils/Functions/Player/vehicle_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 CVehicleSubmenu::eVehicleSubmenuID Submenu_Vehicle = CVehicleSubmenu::Submenu_Vehicle;
 CVehicleSubmenu* g_VehicleSubmenu = nullptr;
@@ -8,7 +9,9 @@ CVehicleSubmenu* g_VehicleSubmenu = nullptr;
 void CVehicleSubmenu::Init() {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "Main > Player > Vehicle", Submenu_vehicle, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > Vehicle" : "Vehicle";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_vehicle, submenuPriority, [](Submenu* sub) {
 
         sub->AddBoolOption("Invincibility", "", &vehicle_invincibility_bool, [=] {
             Vehicle_InvincibilityFunction();

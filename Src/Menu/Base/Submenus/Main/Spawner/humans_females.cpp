@@ -2,6 +2,7 @@
 #include <cmath>
 #include "../../../../../Utils/Saving/States/Spawner/humans_females_default_states.h"
 #include "../../../../../Utils/Functions/Spawner/humans_females_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 CHumansFemalesSubmenu::eHumansFemalesSubmenuID Submenu_HumansFemales = CHumansFemalesSubmenu::Submenu_HumansFemales;
 CHumansFemalesSubmenu* g_HumansFemalesSubmenu = nullptr;
@@ -9,7 +10,9 @@ CHumansFemalesSubmenu* g_HumansFemalesSubmenu = nullptr;
 void CHumansFemalesSubmenu::Init() {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "Main > Spawner > Peds > Humans > Females", Submenu_humans_females, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > Spawner > Peds > Humans > Females" : "Females";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_humans_females, submenuPriority, [](Submenu* sub) {
 
         sub->AddBoolOption("Invincibility", "Spawn The Peds Invincible", &human_females_invincibility_bool, [] {
             HumanFemales_InvincibilityFunction();

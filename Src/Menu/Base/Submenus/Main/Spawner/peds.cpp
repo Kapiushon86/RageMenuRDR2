@@ -4,6 +4,7 @@
 #include "animals.h"
 #include "../../../../../Utils/Saving/States/Spawner/peds_default_states.h"
 #include "../../../../../Utils/Functions/Spawner/peds_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 
 CPedsSubmenu::ePedsSubmenuID Submenu_Peds = CPedsSubmenu::Submenu_Peds;
@@ -22,7 +23,9 @@ void CPedsSubmenu::Init() {
     g_AnimalsSubmenu->Init();
 
 
-    g_Menu->AddSubmenu("RageMenu", "Main > Spawner > Peds", Submenu_peds, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > Spawner > Peds" : "Peds";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_peds, submenuPriority, [](Submenu* sub) {
         sub->AddSubmenuOption("Humans", "", Submenu_humans);
        // sub->AddSubmenuOption("Horses", "", Submenu_horses);
         sub->AddSubmenuOption("Animals", "", Submenu_animals);

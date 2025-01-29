@@ -3,6 +3,7 @@
 #include "weather.h"
 #include "../../../../../Utils/Saving/States/World/world_default_states.h"
 #include "../../../../../Utils/Functions/World/world_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 CWorldSubmenu::eWorldSubmenuID Submenu_World = CWorldSubmenu::Submenu_World;
 CWorldSubmenu* g_WorldSubmenu = nullptr;
@@ -18,7 +19,9 @@ void CWorldSubmenu::Init() {
     g_WeatherSubmenu->Init();
 
 
-    g_Menu->AddSubmenu("RageMenu", "Main > World", Submenu_world, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > World" : "World";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_world, submenuPriority, [](Submenu* sub) {
 
         sub->AddSubmenuOption("Time", "", Submenu_time); 
 

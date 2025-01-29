@@ -1,6 +1,7 @@
 #include "weapons.h"
 #include "../../../../../Utils/Saving/States/Weapons/weapons_default_states.h"
 #include "../../../../../Utils/Functions/Weapons/weapon_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 CWeaponsSubmenu::eWeaponsSubmenuID Submenu_Weapons = CWeaponsSubmenu::Submenu_Weapons;
 CWeaponsSubmenu* g_WeaponsSubmenu = nullptr;
@@ -9,7 +10,9 @@ void CWeaponsSubmenu::Init()
 {
     const int submenuPriority = 8;
 
-    g_Menu->AddSubmenu("RageMenu", "Main > Weapons", Submenu_weapons, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > Weapons" : "Weapons";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_weapons, submenuPriority, [](Submenu* sub) {
 
         sub->AddRegularOption("Unlock All Weapons", "", [] {
             Weapon_UnlockAllFunction();

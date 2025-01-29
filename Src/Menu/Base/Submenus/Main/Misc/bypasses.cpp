@@ -11,8 +11,12 @@ void CBypassesSubmenu::Init()
 {
     g_Menu->AddSubmenu("RageMenu", "Main > Misc > Bypasses", Submenu_bypasses, submenuPriority, [](Submenu* sub)
         {
-            sub->AddBoolOption("Guard Zones", "Enter Restricted Areas", &bypasses_guard_zones_bool, [] {
+            sub->AddBoolOption("Bypass Guard Zones", "Enter Restricted Areas", &bypasses_guard_zones_bool, [] {
                 Bypasses_GuardZonesFunction();
+                });
+
+            sub->AddBoolOption("Bypass Profanity Checks", "", &bypasses_profanity_check_bool, [] {
+                Bypasses_ProfanityCheckFunction();
                 });
 
         });

@@ -2,6 +2,7 @@
 #include "locations.h"
 #include "../../../../../Utils/Saving/States/Teleport/teleport_default_states.h"
 #include "../../../../../Utils/Functions/Teleport/teleport_functions.h"
+#include "../../../../../Utils/Saving/States/Settings/settings_default_states.h"
 
 CTeleportSubmenu::eTeleportSubmenuID Submenu_Teleport = CTeleportSubmenu::Submenu_Teleport;
 CTeleportSubmenu* g_TeleportSubmenu = nullptr;
@@ -13,7 +14,9 @@ void CTeleportSubmenu::Init()
     g_LocationsSubmenu = new CLocationsSubmenu();
     g_LocationsSubmenu->Init();
 
-    g_Menu->AddSubmenu("RageMenu", "Main > Teleport", Submenu_teleport, submenuPriority, [](Submenu* sub) {
+    std::string menuTitle = settings_show_bread_crumbs_bool ? "Main > Teleport" : "Teleport";
+
+    g_Menu->AddSubmenu("RageMenu", menuTitle, Submenu_teleport, submenuPriority, [](Submenu* sub) {
 
       //  sub->AddSubmenuOption("Locations", "", Submenu_locations);
 
