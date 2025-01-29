@@ -81,6 +81,7 @@ private:
     // Settings
 
     static const std::vector<std::pair<std::string, bool*>> settingsOptions;
+    static const std::vector<std::pair<std::string, bool*>> themesOptions;
     static const std::vector<std::pair<std::string, bool*>> savingOptions;
     static const std::vector<std::pair<std::string, bool*>> loggingOptions;
 

@@ -71,6 +71,7 @@
 // Settings
 
 #include "../Saving/States/Settings/settings_default_states.h"
+#include "../Saving/States/Settings/themes_default_states.h"
 #include "../Saving/States/Settings/saving_default_states.h"
 #include "../Saving/States/Settings/logging_default_states.h"
 
@@ -90,7 +91,7 @@
 #include <locale>
 
 const std::vector<std::string>  ConfigManager::categoryOrder = {
-    "PLAYER", "NO CLIP", "MOUNT", "VEHICLE", "MODIFIERS", "WEAPONS", "TELEPORT", "SPAWNER HUMAN MALES", "SPAWNER HUMAN FEMALES", "TIME", "WEATHER", "MISC", "FREE CAMERA", "DISABLES","SAVING", "LOGGING"
+    "PLAYER", "NO CLIP", "MOUNT", "VEHICLE", "MODIFIERS", "WEAPONS", "TELEPORT", "SPAWNER HUMAN MALES", "SPAWNER HUMAN FEMALES", "TIME", "WEATHER", "MISC", "FREE CAMERA", "DISABLES", "SETTINGS", "SAVING", "LOGGING"
 };
 
 const std::unordered_map<std::string, const std::vector<std::pair<std::string, bool*>>*> ConfigManager::optionsCategories = {
@@ -108,8 +109,9 @@ const std::unordered_map<std::string, const std::vector<std::pair<std::string, b
     {categoryOrder[11], &miscOptions},
     {categoryOrder[12], &freeCameraOptions},
     {categoryOrder[13], &disablesOptions},
-    {categoryOrder[14], &savingOptions},
-    {categoryOrder[15], &loggingOptions},
+    {categoryOrder[14], &settingsOptions},
+    {categoryOrder[15], &savingOptions},
+    {categoryOrder[16], &loggingOptions},
 };
 
 const std::vector<std::pair<std::string, bool*>> ConfigManager::playerOptions = {
@@ -141,6 +143,7 @@ const std::vector<std::pair<std::string, bool*>> ConfigManager::mountOptions = {
     {"Invisibility", &mount_invisibility_bool},
     {"Levitate", &mount_levitate_bool},
     {"Infinite Stamina", &mount_infinite_stamina_bool},
+    {"Infinite Swim", &mount_infinite_swim_bool},
     {"Fearless", &mount_fearless_bool},
     {"No Ragdoll", &mount_no_ragdoll_bool},
     {"Always Show Cores", &mount_always_show_cores_bool},
@@ -156,6 +159,7 @@ const std::vector<std::pair<std::string, bool*>> ConfigManager::vehicleOptions =
 
 const std::vector<std::pair<std::string, bool*>> ConfigManager::modifiersOptions = {
     {"Infinite Stamina", &modifiers_infinite_stamina_bool},
+    {"Infinite Swim", &modifiers_infinite_swim_bool},
     {"Infinite Dead Eye", &modifiers_infinite_dead_eye_bool},
     {"Infinite Eagle Eye", &modifiers_infinite_eagle_eye_bool},
 };
@@ -219,8 +223,28 @@ const std::vector<std::pair<std::string, bool*>> ConfigManager::disablesOptions 
     {"Disable Simple Hud", &disables_disable_simple_hud_bool},
     {"Disable Help Text", &disables_disable_help_text_bool},
     {"Disable Location Info", &disables_disable_location_info_bool},
+    {"Disable New Austin Sniper", &disables_disable_new_austin_sniper_bool},
     {"Disable Radar When Menu Is Open", &disables_disable_radar_when_menu_is_open_bool},
     {"Disable Horse Whistle On Controller", &disables_disable_horse_whistle_on_controller_bool},
+};
+
+const std::vector<std::pair<std::string, bool*>> ConfigManager::settingsOptions = {
+   // {"Left", &settings_left_position_bool},
+    {"Background Full Alpha", &settings_full_alpha_bool},
+    {"Show Scroller", &settings_show_scroller_bool},
+    {"Show Submenu Indicators", &settings_show_submenu_indicators_bool},
+    {"Show Check Boxes", &settings_show_check_boxes_bool},
+    {"Show X For False Values", &settings_show_x_for_false_values_bool},
+    {"Show Option Counter", &settings_show_option_counter_bool},
+    {"Show Tool Tips", &settings_show_tool_tips_bool},
+    {"Show Empty Options", &settings_show_empty_options_bool},
+    {"Show Title", &settings_show_title_bool},
+    {"Show Header", &settings_show_header_bool},
+    {"Show Sub Header", &settings_show_sub_header_bool},
+    {"Show Bread Crumbs", &settings_show_bread_crumbs_bool},
+    {"Show Version", &settings_show_version_bool},
+    {"Show Outliners", &settings_show_outliners_bool},
+    {"Show Footer", &settings_show_footer_bool},
 };
 
 const std::vector<std::pair<std::string, bool*>> ConfigManager::savingOptions = {

@@ -20,6 +20,11 @@ public:
     bool CleanupUnwantedFolders();
     bool CreateOptionsIniFile();
     bool CreateSettingsIniFile();
+
+    std::string GetIniOptionsFile() const {
+        return INI_OPTIONS_FILE;
+    }
+
 private:
     const std::string ROOT_FOLDER = "RageMenu";
     const std::string LOGS_FOLDER = "Logs";
