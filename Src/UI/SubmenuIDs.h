@@ -63,6 +63,7 @@ enum eSubmenuID : int
 
     // Settings
     Submenu_settings,
+    Submenu_themes,
     Submenu_saving,
     Submenu_logging,
 

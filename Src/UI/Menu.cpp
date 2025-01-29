@@ -4,10 +4,10 @@
 #include "Drawing.h"
 #include "../common.hpp"
 #include "../Utils/Config/settings_manger.h"
+#include "../Utils/Saving/States/Misc/disables_default_states.h"
 #include <algorithm>
 #include <chrono>
 #include <thread>
-#include "../Utils/Saving/States/Misc/disables_default_states.h"
 
 void playSoundFrontend(const char* name, const char* soundset)
 {
@@ -356,7 +356,7 @@ void CNativeMenu::DisableCommonInputs()
 {
 	if (m_IsOpen) {
 		if (disables_disable_horse_whistle_on_controller_bool && m_ControlIndex == INPUT_GROUP_GAMEPAD) {
-			*getGlobalPtr(1900383 + 316) = 2; // Disables horse whistling this frame, seems to be safe and stable?
+			*getGlobalPtr(1900383 + 316) = 2; // Disables horse whistling this frame.
 			PAD::DISABLE_CONTROL_ACTION(INPUT_GROUP_GAMEPAD, INPUT_WHISTLE, false);
 			PAD::DISABLE_CONTROL_ACTION(INPUT_GROUP_GAMEPAD, INPUT_WHISTLE_HORSEBACK, false);
 		}

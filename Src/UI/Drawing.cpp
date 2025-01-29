@@ -4,6 +4,10 @@
 #include "UIUtil.h"
 #include "Menuversion.h"
 #include <cmath>
+#include <cctype>
+#include <sstream>
+#include "../Utils/Functions/Settings/settings_functions.h"
+#include "../Utils/Saving/States/Settings/settings_default_states.h"
 
 
 #pragma region UI Constants
@@ -18,6 +22,9 @@
 #define COLOR_MAIN_PURPLE 180, 160, 220, 255
 #define COLOR_MAIN_SCROLLER 255,255,255,255
 
+namespace Drawing {
+	float uiBackground::PositionX = 25.0f; // Default left position
+}
 
 // Font Size Constants
 struct uiFontSizes {
@@ -30,7 +37,7 @@ struct uiFontSizes {
 };
 
 struct uiBackground {
-	static constexpr float PositionX = 25.0f; // 1850.0f for right side, 25.0 for left
+	static constexpr float PositionX = 25.0f; // 1685.0f for right side, 25.0 for left
 	static constexpr float PositionY = 25.0f;
 	static constexpr float Width = 650.0f;
 	static constexpr float Height = 1025.0f;
@@ -55,7 +62,7 @@ struct uiFooter {
 	static constexpr float Height = 4.0f;
 	static constexpr float PositionX = uiBackground::MiddleX;
 	static constexpr float PositionY = uiBackground::PositionY + uiBackground::Height - HALF(uiBackground::Width - Width) - HALF(Height);
-	static constexpr float TextPositionY = (PositionY + Height) + HALF(uiFontSizes::Footer) - 42.0f; // Tooltip pos
+	static constexpr float TextPositionY = (PositionY + Height) + HALF(uiFontSizes::Footer) - 62.0f; // Tooltip position
 };
 
 // Scroller Constants
@@ -145,36 +152,68 @@ int calculateFontSize(int fontSize)
 
 inline void DrawHeader(const std::string& text)
 {
-	Drawing::DrawFormattedText(text, Font::Title, COLOR_PURE_WHITE, Alignment::Center, uiFontSizes::Header, uiBackground::MiddleX, uiHeader::TextPositionY);
+	if (settings_show_title_bool)
+	{
+		Drawing::DrawFormattedText(text, Font::Title, COLOR_PURE_WHITE, Alignment::Center, uiFontSizes::Header, uiBackground::MiddleX, uiHeader::TextPositionY);
+	}
 }
-
 
 inline void DrawSubHeader(const std::string& text, bool showVersion = true, float versionSpacing = 10.0f)
 {
-	Drawing::DrawFormattedText(text, Font::Title, COLOR_MAIN_PURPLE, Alignment::Center, uiFontSizes::SubHeader, uiBackground::MiddleX, uiHeader::SubHeaderTextPositionY);
-
-	if (showVersion)
+	if (settings_show_sub_header_bool)
 	{
+		Drawing::DrawFormattedText(text, Font::Title, COLOR_PURE_WHITE, Alignment::Center, uiFontSizes::SubHeader, uiBackground::MiddleX, uiHeader::SubHeaderTextPositionY);
+	}
+
+	if (settings_show_version_bool && showVersion)
+	{
+		// Draw menu version under sub header cus where the fuck else is it gonna go?
 		float versionYPosition = uiHeader::SubHeaderTextPositionY + uiFontSizes::SubHeader + versionSpacing;
-
-		//Draw menu version under subheader cus where the fuck else is it gonna go?
-
 		Drawing::DrawFormattedText("V" + std::string(MENU_VERSION), Font::Title, COLOR_PURE_WHITE, Alignment::Center, uiFontSizes::SubHeader, uiBackground::MiddleX, versionYPosition);
 	}
 }
 
-
+// Tooltip Text
 inline void DrawFooter(const std::string& text)
 {
-	Drawing::DrawFormattedText(text, Font::Body, COLOR_MAIN_PURPLE, Alignment::Center, uiFontSizes::Footer, uiBackground::MiddleX, uiFooter::TextPositionY);
+	if (settings_show_tool_tips_bool) {
+		std::string wrappedText;
+		std::string currentLine;
+		int maxLineLength = 35;
+
+		std::stringstream ss(text);
+		std::string word;
+		std::string formattedText;
+
+		while (ss >> word) {
+			word[0] = std::toupper(word[0]);
+			formattedText += word + " ";
+		}
+
+		for (char c : formattedText) {
+			if (c == ' ' && currentLine.length() >= maxLineLength) {
+				wrappedText += currentLine + "\n";
+				currentLine.clear();
+			}
+			else {
+				currentLine += c;
+			}
+		}
+		if (!currentLine.empty()) {
+			wrappedText += currentLine;
+		}
+
+		Drawing::DrawFormattedText(wrappedText, Font::Body, COLOR_PURE_WHITE, Alignment::Center, uiFontSizes::Footer, uiBackground::MiddleX, uiFooter::TextPositionY);
+	}
 }
 
 void DrawOptionCounter()
 {
+	if (!settings_show_option_counter_bool) return;
+
 	Submenu* sm = g_Menu->GetCurrentSubmenu();
 	int numOptions = sm->GetNumberOfOptions();
 
-	// Count the total number of non-empty options
 	int nonEmptyOptions = 0;
 	for (int i = 0; i < numOptions; ++i) {
 		if (!sm->GetOption(i)->IsEmptyOption) {
@@ -182,7 +221,6 @@ void DrawOptionCounter()
 		}
 	}
 
-	// Find the current index among non-empty options
 	int currentNonEmptyIndex = 0;
 	for (int i = 0; i <= g_Menu->GetSelectionIndex(); ++i) {
 		if (!sm->GetOption(i)->IsEmptyOption) {
@@ -194,7 +232,7 @@ void DrawOptionCounter()
 		Drawing::DrawFormattedText(
 			std::to_string(currentNonEmptyIndex) + " of " + std::to_string(nonEmptyOptions),
 			Font::Body,
-			144, 144, 144, 230,
+			COLOR_PURE_WHITE,
 			Alignment::Right,
 			uiFontSizes::OptionCounter,
 			uiOption::OptionCounterPositionX,
@@ -207,7 +245,7 @@ void DrawOptionCounter()
 		Drawing::DrawFormattedText(
 			std::to_string(currentNonEmptyIndex) + " of " + std::to_string(nonEmptyOptions),
 			Font::Body,
-			144, 144, 144, 230,
+			COLOR_PURE_WHITE,
 			Alignment::Right,
 			uiFontSizes::OptionCounter,
 			uiOption::OptionCounterPositionX,
@@ -224,29 +262,32 @@ void drawOptionInternal(Option* pOption, bool drawInRange, bool drawOutOfRange, 
 	{
 		if (!pOption->IsEmptyOption) {
 			Drawing::DrawSprite("generic_textures", "selection_box_bg_1c", uiOption::PositionX, uiOption::PositionYStart + inRangeIncr, uiOption::Width, uiOption::Height, 0, 50, 50, 50, 110, true);
-			Drawing::DrawFormattedText(pOption->Text, Font::Body, COLOR_WHITE_SMOKE, Alignment::Left, uiFontSizes::Option, uiOption::LeftTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + inRangeIncr);
-			if (pOption->IsSubmenuOption) {
-				Drawing::DrawFormattedText(">>>", Font::Body, COLOR_MAIN_PURPLE, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + inRangeIncr);
+			Drawing::DrawFormattedText(pOption->Text, Font::Body, COLOR_PURE_WHITE, Alignment::Left, uiFontSizes::Option, uiOption::LeftTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + inRangeIncr);
+
+			if (pOption->IsSubmenuOption && settings_show_submenu_indicators_bool) {
+				Drawing::DrawFormattedText(">>>", Font::Body, COLOR_PURE_WHITE, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + inRangeIncr);
 			}
 		}
 		else {
-			Drawing::DrawFormattedText(pOption->Text, Font::Title, COLOR_MAIN_PURPLE, Alignment::Center, uiFontSizes::EmptyOption, uiOption::EmptyOpionTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::EmptyOption) + inRangeIncr);
+			Drawing::DrawFormattedText(pOption->Text, Font::Title, COLOR_PURE_WHITE, Alignment::Center, uiFontSizes::EmptyOption, uiOption::EmptyOpionTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::EmptyOption) + inRangeIncr);
 		}
 	}
 	else if (drawOutOfRange)
 	{
 		if (!pOption->IsEmptyOption) {
 			Drawing::DrawSprite("generic_textures", "selection_box_bg_1c", uiOption::PositionX, uiOption::PositionYStart + outOfRangeIncr, uiOption::Width, uiOption::Height, 0, 50, 50, 50, 110, true);
-			Drawing::DrawFormattedText(pOption->Text, Font::Body, COLOR_WHITE_SMOKE, Alignment::Left, uiFontSizes::Option, uiOption::LeftTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + outOfRangeIncr);
-			if (pOption->IsSubmenuOption) {
-				Drawing::DrawFormattedText(">>>", Font::Body, COLOR_MAIN_PURPLE, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + outOfRangeIncr);
+			Drawing::DrawFormattedText(pOption->Text, Font::Body, COLOR_PURE_WHITE, Alignment::Left, uiFontSizes::Option, uiOption::LeftTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + outOfRangeIncr);
+
+			if (pOption->IsSubmenuOption && settings_show_submenu_indicators_bool) {
+				Drawing::DrawFormattedText(">>>", Font::Body, COLOR_PURE_WHITE, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + outOfRangeIncr);
 			}
 		}
 		else {
-			Drawing::DrawFormattedText(pOption->Text, Font::Title, COLOR_MAIN_PURPLE, Alignment::Center, uiFontSizes::EmptyOption, uiOption::EmptyOpionTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::EmptyOption) + outOfRangeIncr);
+			Drawing::DrawFormattedText(pOption->Text, Font::Title, COLOR_PURE_WHITE, Alignment::Center, uiFontSizes::EmptyOption, uiOption::EmptyOpionTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::EmptyOption) + outOfRangeIncr);
 		}
 	}
 }
+
 
 void drawVectorOptionInternal(Option* pOption, bool drawInRange, bool drawOutOfRange, float inRangeIncr, float outOfRangeIncr)
 {
@@ -261,10 +302,11 @@ void drawVectorOptionInternal(Option* pOption, bool drawInRange, bool drawOutOfR
 		if (selection == index) {
 			// TODO: This fucks up if the screen res is anything but 1920x1080, because of the img src thing.
 			// Need to convert to use Drawing::DrawSprite() somehow...
-			Drawing::DrawFormattedText("<img src='img://menu_textures/selection_arrow_left' height='18' width='18'/> " + option->RightText + " <img src='img://menu_textures/selection_arrow_right' height='18' width='18'/>", Font::Body, COLOR_MAIN_PURPLE, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + inRangeIncr);
+			Drawing::DrawFormattedText("<img src='img://menu_textures/selection_arrow_left' height='18' width='18'/> " + option->RightText + " <img src='img://menu_textures/selection_arrow_right' height='18' width='18'/>", Font::Body, 
+				COLOR_RED, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + inRangeIncr);
 		}
 		else {
-			Drawing::DrawFormattedText(option->RightText, Font::Body, COLOR_MAIN_PURPLE, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + inRangeIncr);
+			Drawing::DrawFormattedText(option->RightText, Font::Body, COLOR_RED, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + inRangeIncr);
 		}
 	}
 	else if (drawOutOfRange)
@@ -272,10 +314,11 @@ void drawVectorOptionInternal(Option* pOption, bool drawInRange, bool drawOutOfR
 		if (selection == index) {
 			// TODO: This fucks up if the screen res is anything but 1920x1080, because of the img src thing.
 			// Need to convert to use Drawing::DrawSprite() somehow...
-			Drawing::DrawFormattedText("<img src='img://menu_textures/selection_arrow_left' height='18' width='18'/> " + option->RightText + " <img src='img://menu_textures/selection_arrow_right' height='18' width='18'/>", Font::Body, COLOR_MAIN_PURPLE, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + outOfRangeIncr);
+			Drawing::DrawFormattedText("<img src='img://menu_textures/selection_arrow_left' height='18' width='18'/> " + option->RightText + " <img src='img://menu_textures/selection_arrow_right' height='18' width='18'/>", Font::Body, 
+				COLOR_RED, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + outOfRangeIncr);
 		}
 		else {
-			Drawing::DrawFormattedText(option->RightText, Font::Body, COLOR_MAIN_PURPLE, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + outOfRangeIncr);
+			Drawing::DrawFormattedText(option->RightText, Font::Body, COLOR_RED, Alignment::Right, uiFontSizes::Option, uiOption::RightTextPositionX, (uiOption::TextPositionYStart - uiFontSizes::Option) + outOfRangeIncr);
 		}
 	}
 }
@@ -287,20 +330,43 @@ void drawBoolOptionInternal(Option* pOption, bool drawInRange, bool drawOutOfRan
 
 	drawOptionInternal(option, drawInRange, drawOutOfRange, inRangeIncr, outOfRangeIncr);
 
-	// Draw checkmark and checkbox
 	if (drawInRange)
 	{
-		if (drawCheckmark) {
-			Drawing::DrawSprite("generic_textures", "tick", uiCheckbox::PositionX, uiOption::PositionYStart + inRangeIncr, uiCheckbox::Width, uiCheckbox::Height, 0, COLOR_MAIN_PURPLE, true);
+		if (settings_show_check_boxes_bool)
+		{
+			Drawing::DrawSprite("generic_textures", "tick_box", uiCheckbox::PositionX, uiOption::PositionYStart + inRangeIncr, uiCheckbox::Width, uiCheckbox::Height, 0, COLOR_PURE_WHITE, true);
 		}
-		Drawing::DrawSprite("generic_textures", "tick_box", uiCheckbox::PositionX, uiOption::PositionYStart + inRangeIncr, uiCheckbox::Width, uiCheckbox::Height, 0, COLOR_MAIN_PURPLE, true);
+
+		if (drawCheckmark)
+		{
+			Drawing::DrawSprite("generic_textures", "tick", uiCheckbox::PositionX, uiOption::PositionYStart + inRangeIncr, uiCheckbox::Width, uiCheckbox::Height, 0, COLOR_PURE_WHITE, true);
+		}
+		else if (settings_show_x_for_false_values_bool)
+		{
+			float xPosition = uiCheckbox::PositionX;
+			float yPosition = uiOption::PositionYStart + inRangeIncr - 15.0f;
+
+			Drawing::DrawFormattedText("X", Font::Body, COLOR_RED, Alignment::Center, uiFontSizes::Option, xPosition, yPosition);
+		}
 	}
 	else if (drawOutOfRange)
 	{
-		if (drawCheckmark) {
-			Drawing::DrawSprite("generic_textures", "tick", uiCheckbox::PositionX, uiOption::PositionYStart + outOfRangeIncr, uiCheckbox::Width, uiCheckbox::Height, 0, COLOR_MAIN_PURPLE, true);
+		if (settings_show_check_boxes_bool)
+		{
+			Drawing::DrawSprite("generic_textures", "tick_box", uiCheckbox::PositionX, uiOption::PositionYStart + outOfRangeIncr, uiCheckbox::Width, uiCheckbox::Height, 0, COLOR_PURE_WHITE, true);
 		}
-		Drawing::DrawSprite("generic_textures", "tick_box", uiCheckbox::PositionX, uiOption::PositionYStart + outOfRangeIncr, uiCheckbox::Width, uiCheckbox::Height, 0, COLOR_MAIN_PURPLE, true);
+
+		if (drawCheckmark)
+		{
+			Drawing::DrawSprite("generic_textures", "tick", uiCheckbox::PositionX, uiOption::PositionYStart + outOfRangeIncr, uiCheckbox::Width, uiCheckbox::Height, 0, COLOR_PURE_WHITE, true);
+		}
+		else if (settings_show_x_for_false_values_bool) 
+		{
+			float xPosition = uiCheckbox::PositionX;
+			float yPosition = uiOption::PositionYStart + outOfRangeIncr - 15.0f;
+
+			Drawing::DrawFormattedText("X", Font::Body, COLOR_RED, Alignment::Center, uiFontSizes::Option, xPosition, yPosition);
+		}
 	}
 }
 
@@ -345,19 +411,16 @@ void Drawing::DrawOption(Option* option)
 	int visibleOptions = g_Menu->GetCurrentSubmenu()->NumberOfVisibleOptions;
 	int index = option->Index;
 
-	if (option->IsEmptyOption) {
-		// Skip empty options from being selected
+	if (!settings_show_empty_options_bool && option->IsEmptyOption) {
 		if (selection == index) {
-			// If the current selection is an empty option, find the next non-empty option
 			int nextValidSelection = selection + 1;
-			// Loop until we find a non-empty option
 			while (nextValidSelection < visibleOptions && g_Menu->GetCurrentSubmenu()->GetOption(nextValidSelection)->IsEmptyOption) {
 				nextValidSelection++;
 			}
-			// Set the selection to the next valid option
 			g_Menu->SetSelectionIndex(nextValidSelection);
 			selection = nextValidSelection;
 		}
+		return;
 	}
 
 	bool drawInRange = (selection <= visibleOptions - 1 && index <= visibleOptions - 1);
@@ -365,7 +428,6 @@ void Drawing::DrawOption(Option* option)
 	float inRangeIncr = (index * INCREMENT);
 	float outOfRangeIncr = ((index - (selection - (visibleOptions - 1))) * INCREMENT);
 
-	// Render the option
 	if (option->IsRegularOption || option->IsSubmenuOption || option->IsEmptyOption) {
 		drawOptionInternal(option, drawInRange, drawOutOfRange, inRangeIncr, outOfRangeIncr);
 	}
@@ -378,62 +440,83 @@ void Drawing::DrawOption(Option* option)
 		drawBoolOptionInternal(option, drawInRange, drawOutOfRange, inRangeIncr, outOfRangeIncr);
 	}
 
-	// Draw the option's footer text
 	if (selection == index && !option->IsEmptyOption) {
 		DrawFooter(option->Footer);
 	}
 }
 
-
-void DrawBackground()
-{
+void DrawBackground() {
 	int numOptions = g_Menu->GetCurrentSubmenu()->GetNumberOfOptions();
 	int visOptions = g_Menu->GetCurrentSubmenu()->NumberOfVisibleOptions;
 	int selection = g_Menu->GetSelectionIndex();
 
+	int backgroundColor[5]; 
+
+	if (settings_full_alpha_bool) {
+		backgroundColor[1] = 11;
+		backgroundColor[2] = 11;
+		backgroundColor[3] = 11;
+		backgroundColor[4] = 255;
+	}
+	else {
+		backgroundColor[1] = 11;   
+		backgroundColor[2] = 11;  
+		backgroundColor[3] = 11; 
+		backgroundColor[4] = 165;  
+	}
+
 	// Background
-	Drawing::DrawSprite("generic_textures", "inkroller_1a", uiBackground::PositionX, uiBackground::PositionY, uiBackground::Width, uiBackground::Height, 0, COLOR_MAIN_BODY, false);
+	Drawing::DrawSprite("generic_textures", "inkroller_1a",
+		BACKGROUND_POSITION_X, BACKGROUND_POSITION_Y,
+		BACKGROUND_WIDTH, BACKGROUND_HEIGHT,
+		1, backgroundColor[1], backgroundColor[2], backgroundColor[3], backgroundColor[4], false);
 
 	// Header
-	Drawing::DrawSprite("generic_textures", "menu_header_1a", uiHeader::PositionX, uiHeader::PositionY, uiHeader::Width, uiHeader::Height, 0, COLOR_MAIN_STEALTH, false);
+	if (settings_show_header_bool) {
+		Drawing::DrawSprite("generic_textures", "menu_header_1a", uiHeader::PositionX, uiHeader::PositionY, uiHeader::Width, uiHeader::Height, 0, COLOR_RED, false);
+	}
 
 	// Footer
-	Drawing::DrawSprite("generic_textures", "menu_bar", uiFooter::PositionX, uiFooter::PositionY, uiFooter::Width, uiFooter::Height, 0, 255, 255, 255, 175, true);
+	if (settings_show_footer_bool) {
+		Drawing::DrawSprite("generic_textures", "menu_bar", uiFooter::PositionX, uiFooter::PositionY, uiFooter::Width, uiFooter::Height, 0, COLOR_RED, true);
 
-	//
-	// Scroller Sprites
-	//
+	}
+
+	// Outliners
 
 	// Top
-	Drawing::DrawSprite("menu_textures", "scroller_left_top", uiScroller::LeftPositionX, 215, uiScroller::LeftWidth, 25, 0, COLOR_MAIN_PURPLE, false);
-	Drawing::DrawSprite("menu_textures", "scroller_right_top", uiScroller::RightPositionX, 215, uiScroller::RightWidth, 25, 0, COLOR_MAIN_PURPLE, false);
-	if (selection >= visOptions) {
-		Drawing::DrawSprite("menu_textures", "scroller_arrow_top", uiScroller::MiddlePositionX, 227.5f, uiScroller::MiddleWidth, 25, 0, COLOR_MAIN_PURPLE, true);
-	}
-	else {
-		Drawing::DrawSprite("menu_textures", "scroller_line_up", uiScroller::MiddlePositionX, 227.5f, uiScroller::MiddleWidth, 25, 0, COLOR_MAIN_PURPLE, true);
-	}
+	if (settings_show_outliners_bool) {
+		Drawing::DrawSprite("menu_textures", "scroller_left_top", uiScroller::LeftPositionX, 215, uiScroller::LeftWidth, 25, 0, COLOR_RED, false);
+		Drawing::DrawSprite("menu_textures", "scroller_right_top", uiScroller::RightPositionX, 215, uiScroller::RightWidth, 25, 0, COLOR_RED, false);
 
-	// Bottom
-	if (numOptions <= visOptions) {
-		Drawing::DrawSprite("menu_textures", "scroller_left_bottom", uiScroller::LeftPositionX, 244 + (numOptions * INCREMENT), uiScroller::LeftWidth, 25, 0, COLOR_MAIN_PURPLE, false);
-		Drawing::DrawSprite("menu_textures", "scroller_right_bottom", uiScroller::RightPositionX, 244 + (numOptions * INCREMENT), uiScroller::RightWidth, 25, 0, COLOR_MAIN_PURPLE, false);
-		Drawing::DrawSprite("menu_textures", "scroller_line_down", uiScroller::MiddlePositionX, 256.5f + (numOptions * INCREMENT), uiScroller::MiddleWidth, 25, 0, COLOR_MAIN_PURPLE, true);
-	}
-	else {
-		Drawing::DrawSprite("menu_textures", "scroller_left_bottom", uiScroller::LeftPositionX, 244 + (visOptions * INCREMENT), uiScroller::LeftWidth, 25, 0, COLOR_MAIN_PURPLE, false);
-		Drawing::DrawSprite("menu_textures", "scroller_right_bottom", uiScroller::RightPositionX, 244 + (visOptions * INCREMENT), uiScroller::RightWidth, 25, 0, COLOR_MAIN_PURPLE, false);
-		if (selection == numOptions - 1) {
-			Drawing::DrawSprite("menu_textures", "scroller_line_down", uiScroller::MiddlePositionX, 256.5f + (visOptions * INCREMENT), uiScroller::MiddleWidth, 25, 0, COLOR_MAIN_PURPLE, true);
+		if (selection >= visOptions) {
+			Drawing::DrawSprite("menu_textures", "scroller_arrow_top", uiScroller::MiddlePositionX, 227.5f, uiScroller::MiddleWidth, 25, 0, COLOR_RED, true);
 		}
 		else {
-			Drawing::DrawSprite("menu_textures", "scroller_arrow_bottom", uiScroller::MiddlePositionX, 256.5f + (visOptions * INCREMENT), uiScroller::MiddleWidth, 25, 0, COLOR_MAIN_PURPLE, true);
+			Drawing::DrawSprite("menu_textures", "scroller_line_up", uiScroller::MiddlePositionX, 227.5f, uiScroller::MiddleWidth, 25, 0, COLOR_RED, true);
+		}
+
+		// Bottom
+		if (numOptions <= visOptions) {
+			Drawing::DrawSprite("menu_textures", "scroller_left_bottom", uiScroller::LeftPositionX, 244 + (numOptions * INCREMENT), uiScroller::LeftWidth, 25, 0, COLOR_RED, false);
+			Drawing::DrawSprite("menu_textures", "scroller_right_bottom", uiScroller::RightPositionX, 244 + (numOptions * INCREMENT), uiScroller::RightWidth, 25, 0, COLOR_RED, false);
+			Drawing::DrawSprite("menu_textures", "scroller_line_down", uiScroller::MiddlePositionX, 256.5f + (numOptions * INCREMENT), uiScroller::MiddleWidth, 25, 0, COLOR_RED, true);
+		}
+		else {
+			Drawing::DrawSprite("menu_textures", "scroller_left_bottom", uiScroller::LeftPositionX, 244 + (visOptions * INCREMENT), uiScroller::LeftWidth, 25, 0, COLOR_RED, false);
+			Drawing::DrawSprite("menu_textures", "scroller_right_bottom", uiScroller::RightPositionX, 244 + (visOptions * INCREMENT), uiScroller::RightWidth, 25, 0, COLOR_RED, false);
+			if (selection == numOptions - 1) {
+				Drawing::DrawSprite("menu_textures", "scroller_line_down", uiScroller::MiddlePositionX, 256.5f + (visOptions * INCREMENT), uiScroller::MiddleWidth, 25, 0, COLOR_RED, true);
+			}
+			else {
+				Drawing::DrawSprite("menu_textures", "scroller_arrow_bottom", uiScroller::MiddlePositionX, 256.5f + (visOptions * INCREMENT), uiScroller::MiddleWidth, 25, 0, COLOR_RED, true);
+			}
 		}
 	}
+	
 }
 
-
-
+// Scroller
 
 void DrawSelectionBox()
 {
@@ -444,20 +527,21 @@ void DrawSelectionBox()
 	int selection = g_Menu->GetSelectionIndex();
 
 	// Left, Right, Top, Bottom
-	if (selection >= visibleOptions-1) {
-		Drawing::DrawSprite("menu_textures", "crafting_highlight_l", uiSelectionBox::LeftPositionX,   uiOption::PositionYStart + ((visibleOptions-1) * INCREMENT), 19, uiSelectionBox::LeftHeight, 0, COLOR_MAIN_PURPLE, true);
-		Drawing::DrawSprite("menu_textures", "crafting_highlight_r", uiSelectionBox::RightPositionX,  uiOption::PositionYStart + ((visibleOptions-1) * INCREMENT), 19, uiSelectionBox::RightHeight, 0, COLOR_MAIN_PURPLE, true);
-		Drawing::DrawSprite("menu_textures", "crafting_highlight_t", uiSelectionBox::TopPositionX,    uiSelectionBox::TopPositionY + ((visibleOptions - 1) * INCREMENT), uiSelectionBox::TopWidth, 22, 0, COLOR_MAIN_PURPLE, true);
-		Drawing::DrawSprite("menu_textures", "crafting_highlight_b", uiSelectionBox::BottomPositionX, uiSelectionBox::BottomPositionY + ((visibleOptions-1) * INCREMENT), uiSelectionBox::BottomWidth, 22, 0, COLOR_MAIN_PURPLE, true);
-	}
-	else {
-		Drawing::DrawSprite("menu_textures", "crafting_highlight_l", uiSelectionBox::LeftPositionX,   uiOption::PositionYStart + (selection * INCREMENT), 19, uiSelectionBox::LeftHeight, 0, COLOR_MAIN_PURPLE, true);
-		Drawing::DrawSprite("menu_textures", "crafting_highlight_r", uiSelectionBox::RightPositionX,  uiOption::PositionYStart + (selection * INCREMENT), 19, uiSelectionBox::RightHeight, 0, COLOR_MAIN_PURPLE, true);
-		Drawing::DrawSprite("menu_textures", "crafting_highlight_t", uiSelectionBox::TopPositionX,    uiSelectionBox::TopPositionY + (selection * INCREMENT), uiSelectionBox::TopWidth, 22, 0, COLOR_MAIN_PURPLE, true);
-		Drawing::DrawSprite("menu_textures", "crafting_highlight_b", uiSelectionBox::BottomPositionX, uiSelectionBox::BottomPositionY + (selection * INCREMENT), uiSelectionBox::BottomWidth, 22, 0, COLOR_MAIN_PURPLE, true);
+	if (settings_show_scroller_bool) {
+		if (selection >= visibleOptions - 1) {
+			Drawing::DrawSprite("menu_textures", "crafting_highlight_l", uiSelectionBox::LeftPositionX, uiOption::PositionYStart + ((visibleOptions - 1) * INCREMENT), 19, uiSelectionBox::LeftHeight, 0, COLOR_RED, true);
+			Drawing::DrawSprite("menu_textures", "crafting_highlight_r", uiSelectionBox::RightPositionX, uiOption::PositionYStart + ((visibleOptions - 1) * INCREMENT), 19, uiSelectionBox::RightHeight, 0, COLOR_RED, true);
+			Drawing::DrawSprite("menu_textures", "crafting_highlight_t", uiSelectionBox::TopPositionX, uiSelectionBox::TopPositionY + ((visibleOptions - 1) * INCREMENT), uiSelectionBox::TopWidth, 22, 0, COLOR_RED, true);
+			Drawing::DrawSprite("menu_textures", "crafting_highlight_b", uiSelectionBox::BottomPositionX, uiSelectionBox::BottomPositionY + ((visibleOptions - 1) * INCREMENT), uiSelectionBox::BottomWidth, 22, 0, COLOR_RED, true);
+		}
+		else {
+			Drawing::DrawSprite("menu_textures", "crafting_highlight_l", uiSelectionBox::LeftPositionX, uiOption::PositionYStart + (selection * INCREMENT), 19, uiSelectionBox::LeftHeight, 0, COLOR_RED, true);
+			Drawing::DrawSprite("menu_textures", "crafting_highlight_r", uiSelectionBox::RightPositionX, uiOption::PositionYStart + (selection * INCREMENT), 19, uiSelectionBox::RightHeight, 0, COLOR_RED, true);
+			Drawing::DrawSprite("menu_textures", "crafting_highlight_t", uiSelectionBox::TopPositionX, uiSelectionBox::TopPositionY + (selection * INCREMENT), uiSelectionBox::TopWidth, 22, 0, COLOR_RED, true);
+			Drawing::DrawSprite("menu_textures", "crafting_highlight_b", uiSelectionBox::BottomPositionX, uiSelectionBox::BottomPositionY + (selection * INCREMENT), uiSelectionBox::BottomWidth, 22, 0, COLOR_RED, true);
+		}
 	}
 }
-
 
 void Drawing::DrawMenu()
 {
