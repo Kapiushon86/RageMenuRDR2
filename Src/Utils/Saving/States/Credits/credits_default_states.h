@@ -1,5 +1,0 @@
-#ifndef CREDITS_DEFAULT_STATES_H
-#define CREDITS_DEFAULT_STATES_H
-
-
-#endif
